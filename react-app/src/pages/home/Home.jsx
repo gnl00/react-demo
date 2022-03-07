@@ -42,6 +42,10 @@ export default class Home extends Component {
           <p>homeSte: {this.state.homeSte}</p>
         </header>
 
+        <div className='Home-nav'>
+
+        </div>
+
         <div className='Home-content'>
           <p>get value from son: {this.state.sonVal}</p>
 
