@@ -5,6 +5,7 @@ import Father from "../context/Father";
 import MultiContext from "../multiContext/MultiContext";
 import OnRefFather from "../onRef/OnRefFather";
 import RefFather from "../ref/RefFather";
+import EmitFather from "../events/EmitFather";
 
 export default class Home extends Component {
   constructor(props) {
@@ -61,6 +62,10 @@ export default class Home extends Component {
 
         <div className='Ref' style={{border: 'green solid 2px'}}>
           <RefFather />
+        </div>
+
+        <div className='Events'>
+          <EmitFather />
         </div>
       </div>
     )
