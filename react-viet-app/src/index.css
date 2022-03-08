@@ -1,0 +1,16 @@
+/* ./src/index.css */
+@tailwind base;
+
+  body {
+    @apply border-4 border-indigo-800
+    font-mono text-base font-semibold
+  }
+
+  .btn {
+    @apply rounded rounded-lg
+  }
+
+@tailwind components;
+@tailwind utilities;
+
+
