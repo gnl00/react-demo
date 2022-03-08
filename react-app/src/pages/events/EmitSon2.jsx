@@ -25,9 +25,7 @@ export default class EmitSon2 extends Component {
   componentWillUnmount() {
     // 组件销毁前移除监听
     emitter.removeListener('info', info => {
-      this.setState({
-        info: 'Son222 移除监听 -- ' + info
-      })
+      console.log('Son222 移除监听 -- ' + info)
     })
   }
 
