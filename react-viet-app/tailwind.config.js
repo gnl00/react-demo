@@ -11,11 +11,13 @@ module.exports = {
       height: {
         '32rem': '32rem',
         '36rem': '36rem',
-        '40rem': '40rem',
         '42rem': '42rem',
-        '48rem': '48rem',
-        '60rem': '60rem',
+        '52rem': '52rem',
         '64rem': '64rem',
+      },
+      backgroundColor: {
+        'navBg': '#3489fd',
+        'navBgActive': '#1f67c1',
       }
     },
   },

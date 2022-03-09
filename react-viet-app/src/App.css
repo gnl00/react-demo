@@ -4,21 +4,12 @@
     .App {
         @apply
         border-2 border-red-500
-        h-40rem p-1
         grid grid-cols-11
     }
 
-    .App-item {
+    .nav {
         @apply
-        border-2 border-yellow-500
-    }
-
-    .App-item-left {
-        @apply rounded rounded-l-4xl
-    }
-
-    .App-item-right {
-        @apply rounded rounded-r-3xl
+        col-span-1
     }
 }
 

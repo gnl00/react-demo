@@ -3,7 +3,7 @@
 @layer components {
   .NavBar {
     @apply
-    bg-blue-100 h-full w-full
+    bg-blue-200 h-full w-full
     flex flex-col
     rounded rounded-l-4xl
   }
@@ -26,6 +26,7 @@
     border-red-500 border-2
     flex-1 w-full h-full
     flex justify-center items-center
+    bg-white
   }
 
   .nav-avatar {
@@ -35,4 +36,16 @@
     flex-1 w-full h-full
     flex justify-center items-center
   }
+
+  .nav-icon {
+    @apply
+    w-6
+  }
+
+  .nav-avatar-img {
+    @apply
+    w-16
+    rounded rounded-xl
+  }
+
 }
