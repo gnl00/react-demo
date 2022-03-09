@@ -3,8 +3,36 @@
 @layer components {
   .NavBar {
     @apply
-    bg-blue-400 h-full w-full
-    flex justify-center items-center
+    bg-blue-100 h-full w-full
+    flex flex-col
     rounded rounded-l-4xl
+  }
+
+  .Nav-item {
+    @apply
+    border-red-500 border-2
+    flex-1 w-full h-full
+    flex justify-center items-center
+  }
+
+  .Nav-item:hover {
+    @apply
+    bg-blue-400
+  }
+
+  .nav-logo {
+    @apply
+    rounded rounded-tl-4xl
+    border-red-500 border-2
+    flex-1 w-full h-full
+    flex justify-center items-center
+  }
+
+  .nav-avatar {
+    @apply
+    rounded rounded-bl-4xl
+    border-red-500 border-2
+    flex-1 w-full h-full
+    flex justify-center items-center
   }
 }

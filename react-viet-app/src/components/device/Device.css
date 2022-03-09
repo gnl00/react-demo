@@ -1,0 +1,17 @@
+@tailwind components;
+
+@layer components {
+    .Device {
+        @apply bg-gray-100
+        h-full w-full
+        flex flex-col
+    }
+
+    .Device-item {
+        @apply
+        flex-1
+        flex justify-center items-center
+        w-full h-full
+        border-blue-500 border-2
+    }
+}

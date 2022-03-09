@@ -1,7 +1,8 @@
 import './App.css'
 import NavBar from "./components/navBar/NavBar";
-import DeviceInfo from "./components/deviceInfo/DeviceInfo";
 import ControlCenter from "./components/controlCenter/ControlCenter";
+import ShowArea from "./components/showArea/ShowArea";
+import Device from "./components/device/Device";
 
 function App() {
   return (
@@ -11,14 +12,16 @@ function App() {
       </div>
 
       <div className='App-item col-span-3'>
-        <DeviceInfo />
+        <Device />
       </div>
 
       <div className='App-item col-span-5'>
         <ControlCenter />
       </div>
 
-      <div className='App-item App-item-right col-span-2'>message</div>
+      <div className='App-item App-item-right col-span-2'>
+        <ShowArea />
+      </div>
 
     </div>
   )
