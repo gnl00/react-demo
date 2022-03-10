@@ -3,18 +3,20 @@
 @layer components {
     .ConCenter {
         @apply
-        h-full w-full bg-yellow-100
+        h-full w-full
         grid grid-rows-6
-    }
-
-    .ConCenter-item {
-        @apply
-        border-green-500 border-2
-        flex justify-center items-center
     }
 
     .ConCenter-center {
         @apply
         row-span-4
+    }
+
+    .top-btn {
+        @apply h-full
+    }
+
+    .top-btn:hover {
+        @apply bg-blue-600
     }
 }

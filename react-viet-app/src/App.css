@@ -5,6 +5,7 @@
         @apply
         border-2 border-red-500
         grid grid-cols-11
+        min-h-screen
     }
 
     .nav {

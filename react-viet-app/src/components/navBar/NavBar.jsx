@@ -14,7 +14,7 @@ function NavBar() {
   const [scheduleActive, setScheduleActive] = useState(false)
 
   useEffect(() => {
-    console.log('effect 渲染 ui 后调用 111')
+    console.log('第二个参数不传，effect 渲染 ui 后调用 111')
   })
 
   useEffect(() => {
@@ -26,8 +26,6 @@ function NavBar() {
 
   useEffect(() => {
     console.log('第二个参数为非空数组，则在数据内参数变化后调用 333')
-
-    console.log(activePath)
 
     switch (activePath) {
       case '/':
@@ -75,7 +73,7 @@ function NavBar() {
     <div className={'flex relative h-full'}>
       <div className='NavBar'>
         <NavLink to={'/'} className='nav-logo'>
-          <img src={logo} className='' />
+          <img src={logo} className='w-24' />
         </NavLink>
 
         <NavLink to='/home' className={['Nav-item nav-home', homeActive ? 'bg-blue-400': ''].join(' ')}>

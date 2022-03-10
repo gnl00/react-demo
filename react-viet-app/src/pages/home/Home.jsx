@@ -1,7 +1,7 @@
 import './home.css'
-import Device from "../../components/device/Device";
-import ControlCenter from "../../components/controlCenter/ControlCenter";
-import ShowArea from "../../components/showArea/ShowArea";
+import Device from "./device/Device";
+import ControlCenter from "./controlCenter/ControlCenter";
+import ShowArea from "./showArea/ShowArea";
 
 function Home() {
   return (

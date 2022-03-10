@@ -12,11 +12,11 @@
         flex-1
 
         w-full h-full
-        border-blue-500 border-2
     }
 
     .device-list {
-        @apply flex flex-row justify-around
+        @apply
+        flex flex-row justify-around
     }
 
     .device-list-item {
@@ -25,7 +25,23 @@
     }
 
     .device-list-img {
-        @apply w-10
+        @apply w-12
         border-gray-300 border-2 rounded rounded-lg
+    }
+
+    .device-info {
+        @apply
+        w-full m-2
+        grid grid-cols-3 justify-items-center
+    }
+
+    .device-info div {
+        @apply
+        w-full
+        text-gray-600
+        bg-gray-100
+        pr-4
+        border-gray-200 border-r-4
+
     }
 }

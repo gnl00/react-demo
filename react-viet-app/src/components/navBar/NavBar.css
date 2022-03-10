@@ -10,9 +10,9 @@
 
   .Nav-item {
     @apply
-    border-red-500 border-2
     flex-1 w-full h-full
     flex justify-center items-center
+    border-blue-100 border-2
   }
 
   .Nav-item:hover {
@@ -23,16 +23,14 @@
   .nav-logo {
     @apply
     rounded rounded-tl-4xl
-    border-red-500 border-2
     flex-1 w-full h-full
     flex justify-center items-center
-    bg-white
+    bg-gray-100
   }
 
   .nav-avatar {
     @apply
     rounded rounded-bl-4xl
-    border-red-500 border-2
     flex-1 w-full h-full
     flex justify-center items-center
   }

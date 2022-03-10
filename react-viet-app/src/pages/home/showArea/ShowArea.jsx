@@ -4,7 +4,7 @@ function ShowArea() {
   return (
     <div className='ShowArea'>
       <div className='ShowArea-item ShowArea-top'>
-        <div className='top-title'>this is title for topppppppppppppppppppp</div>
+        <div className='top-title'>XX TV</div>
       </div>
       <div className='ShowArea-item ShowArea-center'>
         <div className='center-item show-data-list'>DataList DataList</div>
