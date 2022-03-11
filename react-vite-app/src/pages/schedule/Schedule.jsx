@@ -1,6 +1,7 @@
 import './Schedule.css'
 
-function Schedule() {
+function Schedule(props) {
+
   return (
     <div className='Schedule'>
       <div>

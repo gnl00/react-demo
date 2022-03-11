@@ -1,5 +1,5 @@
 import {BrowserRouter, Routes, Route, useRoutes} from 'react-router-dom'
-import Analyse from "./pages/analyse/Analyse";
+import {Analyse, AppConn} from "./pages/analyse/Analyse";
 import Schedule from "./pages/schedule/Schedule";
 import App from "./App";
 import Home from "./pages/home/Home";
@@ -45,7 +45,7 @@ const AppRoutes = () => {
         <Route path='/' element={<App />}>
           <Route index element={<Home />} />
           <Route path='/home' element={<Home />} />
-          <Route path='/analyse' element={<Analyse />}></Route>
+          <Route path='/analyse' element={<AppConn />}></Route>
           <Route path='/schedule' element={<Schedule />}></Route>
         </Route>
       </Routes>
