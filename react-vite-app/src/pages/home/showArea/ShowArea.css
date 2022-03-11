@@ -1,0 +1,12 @@
+@tailwind components;
+
+@layer components {
+    .ShowArea {
+        @apply
+        w-full
+        rounded rounded-r-3xl
+        border-gray-100 border-l-4
+    }
+
+
+}

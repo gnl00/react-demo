@@ -4,13 +4,11 @@
     .Home {
         @apply
         col-span-10
-
         grid grid-cols-11
+        h-full
     }
 
     .home-item {
-        @apply
-        border-2 border-yellow-500
     }
 
     .home-left {
@@ -19,5 +17,6 @@
 
     .home-right {
         @apply rounded rounded-r-3xl
+        h-full
     }
 }

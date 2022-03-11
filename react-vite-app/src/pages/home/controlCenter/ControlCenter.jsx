@@ -6,6 +6,7 @@ function ControlCenter() {
     text: 'Start',
     statue: true
   })
+  const [micStatus, setMicStatus] = useState(true)
 
   const startBtnClick = () => {
     if (startBtn.statue) {
@@ -23,6 +24,9 @@ function ControlCenter() {
     }
   }
 
+  const micClick = () => {
+    setMicStatus(!micStatus)
+  }
 
   return (
     <div className='ConCenter'>
@@ -43,15 +47,23 @@ function ControlCenter() {
             </div>
 
             <div className={'flex justify-center items-center'}>
-              <span className={'bg-gray-100 rounded p-2'}>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                </svg>
+              <span className={'bg-gray-100 rounded p-2 hover:bg-gray-300'} onClick={micClick}>
+                {
+                  micStatus ?
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg> :
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill="evenodd"
+                            d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z"
+                            clip-rule="evenodd"/>
+                    </svg>
+                }
               </span>
             </div>
 
             <div className={'flex justify-center items-center'}>
-              <span className={'bg-gray-100 rounded p-2'}>
+              <span className={'bg-gray-100 rounded p-2 hover:bg-gray-300'}>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -59,7 +71,7 @@ function ControlCenter() {
             </div>
 
             <div className={'flex justify-center items-center'}>
-              <span className={'bg-gray-100 rounded p-2'}>
+              <span className={'bg-gray-100 rounded p-2 hover:bg-gray-300'}>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                 </svg>
@@ -72,7 +84,7 @@ function ControlCenter() {
       <div className='ConCenter-item ConCenter-center m-8'>
         <div className={'grid grid-cols-5 justify-items-center h-full'}>
 
-          <div className={'bg-green-100 flex flex-col justify-center items-center'}>
+          <div className={'bg-green-100 hover:bg-green-200 hover:p-1 hover:text-gray-700 flex flex-col justify-center items-center rounded rounded-full'}>
 
             <div className={'flex-1'}>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -129,7 +141,7 @@ function ControlCenter() {
             </div>
           </div>
 
-          <div className={'bg-red-100 flex flex-col justify-center items-center'}>
+          <div className={'bg-red-100 flex flex-col justify-center items-center rounded rounded-full hover:bg-red-200 hover:p-1 hover:text-gray-700'}>
 
             <div className={'flex-1'}>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
