@@ -2,21 +2,35 @@ import './Analyse.css'
 import store from "../../redux/store";
 import {incrementAction, decrementAction} from "../../redux/action/action";
 import {useEffect, useState } from "react";
+import {useDispatch} from "react-redux";
 
 import {connect} from "react-redux";
 
+// 将 state 的值映射到 props
 const mapStateToProps = (state) => {
   return {
     ...state
   }
 }
 
-const AppConn = connect(mapStateToProps, null)(Analyse)
+// 将 action 映射到 props
+const mapDispatchToProps = (dispatch) => {
+  return {
+    incrementClick: (payload) => dispatch(incrementAction(payload)),
+    decrementClick: (payload) => dispatch(decrementAction(payload)),
+  }
+}
+
+const AppConn = connect(mapStateToProps, mapDispatchToProps)(Analyse)
 
 function Analyse(props) {
   const [state, setState] = useState(0)
 
-  console.log(props.reducer)
+  let dispatch = useDispatch();
+
+  console.log(props)
+
+  const {incrementClick, decrementClick} = props
 
   useEffect(() => {
 
@@ -27,19 +41,24 @@ function Analyse(props) {
   }, [])
 
   const increase = () => {
-    console.log('before increase ', store.getState())
+    // console.log('before increase ', store.getState())
 
     // store.dispatch 接受一个 Action 对象作为参数，将它发送出去
-    store.dispatch(incrementAction(1))
+    // dispatch(incrementAction(1))
+
+    incrementClick(1)
 
     setState(store.getState().reducer)
 
-    console.log('after increase ', store.getState())
+    // console.log('after increase ', store.getState())
 
   }
 
   const decrease = () => {
-    store.dispatch(decrementAction(1))
+    // dispatch(decrementAction(1))
+
+    decrementClick(2)
+
     setState(store.getState().reducer)
   }
 

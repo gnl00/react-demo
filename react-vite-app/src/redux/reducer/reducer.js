@@ -11,9 +11,9 @@ const reducer = (state = iniState, action) => {
   switch (action.type) {
     case INCREMENT:
 
-      console.log('old state ', state)
+      // console.log('old state ', state)
       // 处理 state
-      console.log('new state ', state + action.payload)
+      // console.log('new state ', state + action.payload)
 
       // 返回新的 state
       return state + action.payload
