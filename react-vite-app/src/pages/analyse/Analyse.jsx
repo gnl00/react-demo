@@ -1,5 +1,4 @@
 import './Analyse.css'
-import store from "../../redux/store";
 import {incrementAction, decrementAction} from "../../redux/action/action";
 import {useEffect, useState } from "react";
 import {useDispatch} from "react-redux";
@@ -28,7 +27,9 @@ function Analyse(props) {
 
   let dispatch = useDispatch();
 
-  console.log(props)
+  // console.log(props)
+
+  const { reducer } = props
 
   const {incrementClick, decrementClick} = props
 
@@ -48,7 +49,7 @@ function Analyse(props) {
 
     incrementClick(1)
 
-    setState(store.getState().reducer)
+    setState(reducer)
 
     // console.log('after increase ', store.getState())
 
@@ -59,7 +60,7 @@ function Analyse(props) {
 
     decrementClick(2)
 
-    setState(store.getState().reducer)
+    setState(reducer)
   }
 
   return (
