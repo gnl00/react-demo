@@ -1,0 +1,13 @@
+@tailwind base;
+
+@layer base {
+  body {
+    margin: 0;
+    @apply font-mono font-semibold
+  }
+}
+
+@tailwind components;
+@tailwind utilities;
+
+
