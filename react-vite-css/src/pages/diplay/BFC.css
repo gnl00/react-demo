@@ -1,0 +1,74 @@
+.outer {
+    height: 100%;
+}
+
+.left {
+    float: left;
+    height: 100%;
+    width: 200px;
+}
+
+.right {
+    margin-left: 200px;
+    height: 100%;
+}
+
+.outer2 {
+    height: 100%;
+}
+
+.left2 {
+    float: left;
+    width: 200px;
+    height: 100%;
+}
+
+.right2 {
+    height: 100%;
+    overflow: auto;
+}
+
+.o3 {
+    height: 100%;
+    display: flex;
+}
+.l3 {
+    height: 100%;
+    width: 200px;
+}
+.r3 {
+    height: 100%;
+    flex: 1;
+}
+
+.o4 {
+    height: 100%;
+    position: relative;
+}
+.l4 {
+    height: 100%;
+    width: 200px;
+
+    position: absolute;
+}
+.r4 {
+    height: 100%;
+    margin-left: 200px;
+}
+
+.o5 {
+    height: 100%;
+    position: relative;
+}
+.l5 {
+    height: 100%;
+    width: 200px;
+}
+.r5 {
+    height: 100%;
+    position: absolute;
+    left: 200px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
