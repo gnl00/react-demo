@@ -51,3 +51,27 @@
 #box-ani:hover {
     animation-play-state: paused;
 }
+
+#circle {
+    transition-duration: 1s;
+}
+
+#circle:hover {
+    height: 200px;
+    width: 200px;
+}
+
+#circleAni {
+    animation: circleAnimation 1s ease-in-out 1s infinite alternate running forwards;
+}
+
+#circleAni:hover {
+    animation-play-state: paused;
+}
+
+@keyframes circleAnimation {
+    50% {
+        height: 150px;
+        width: 150px;
+    }
+}
