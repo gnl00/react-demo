@@ -3,3 +3,24 @@
 @layer components {
 }
 
+.rBar-enter {
+    opacity: 0;
+    transform: translateX(100%)
+}
+
+.rBar-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 1s, transform 1s
+}
+
+.rBar-exit {
+    opacity: 1;
+    transform: translateX(0)
+}
+
+.rBar-exit-active {
+    opacity: 0;
+    transform: translateX(-100%);
+    transition: opacity 1s, transform 1s;
+}
