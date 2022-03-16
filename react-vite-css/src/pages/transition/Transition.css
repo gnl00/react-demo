@@ -1,6 +1,6 @@
 #box {
     /* transition: property duration timing-function delay;
-     property 规定设置过渡效果的 CSS 属性的名称
+     property 规定设置过渡效果的 CSS 属性的名称 可以是 with/height/color/opacity 等
      duration 规定完成过渡效果需要多少秒或毫秒
      transition-timing-function	规定速度效果的速度曲线
      delay 定义过渡效果何时开始
@@ -74,4 +74,25 @@
         height: 150px;
         width: 150px;
     }
+}
+
+#tran-width {
+    width: 50px;
+    height: 50px;
+    transition-duration: 1.5s;
+    transition-timing-function: ease-in-out;
+}
+
+#tran-width:hover {
+    width: 200px;
+}
+
+#tran-opacity {
+    width: 50px;
+    height: 50px;
+    opacity: 1;
+}
+
+#tran-opacity:hover {
+    opacity: 0.5;
 }

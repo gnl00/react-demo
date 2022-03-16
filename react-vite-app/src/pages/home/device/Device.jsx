@@ -12,8 +12,16 @@ function Device() {
 
   // componentDidMount
   useEffect(() => {
-    setDevices(getDeviceData())
+
+    const fetchDeviceData = async () => {
+      const response = await getDeviceData()
+      setDevices(response)
+    }
+    fetchDeviceData()
+    // console.log(devices)
+
   }, [])
+
 
   useEffect(() => {
     if (devices.length !== 0) {
