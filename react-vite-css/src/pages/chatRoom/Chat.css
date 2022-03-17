@@ -1,0 +1,4 @@
+.sent-text {
+    transition-timing-function: ease-in-out;
+    transition-duration: 3s;
+}
