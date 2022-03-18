@@ -1,6 +1,7 @@
 import './ChatSelf.css'
 import emitter from "../../util/EmitterUtils";
 import SelfWS from "../../websocket/SelfWS";
+import { buildMsg } from "../../util/MessageUtils";
 
 // 消息样式
 // const msgObj = {
@@ -13,6 +14,7 @@ import SelfWS from "../../websocket/SelfWS";
 // }
 
 import {useEffect, useState} from "react";
+import {ChatBox, InputBox, ReceivedBox, SentBox, TimeSpan, Title} from "../../components/chat/Chat";
 
 export default function ChatSelf() {
 
@@ -56,7 +58,6 @@ export default function ChatSelf() {
       console.log('remove emitter listeners')
       emitter.removeListener(SELF_EMITTER_EVENT, message => {})
     }
-
   }, [])
 
   useEffect(() => {
@@ -69,27 +70,15 @@ export default function ChatSelf() {
   }, [receive])
 
   /* ================================================================ functions ================================================================ */
-  const buildMsg = ({from, to, date = new Date(), type = 'string', body, read = false}) => {
-    return {
-      from,
-      to,
-      date,
-      type,
-      body,
-      read,
-    }
-  }
-
   const onMessage = message => {
     setReceive(message)
   }
 
-  /* ================================================================ mouse or keyboard events ================================================================ */
-  const onInputChange = (evt) => {
-    setInput(evt.target.value)
+  const inputBoxCb = val => {
+    setInput(val)
   }
 
-  const sendClick = () => {
+  const sendClickCb = () => {
     if (input) {
       // 构建消息
       const finalMsg = buildMsg({from, to, body: input})
@@ -103,7 +92,7 @@ export default function ChatSelf() {
     setInput('')
   }
 
-  const closeClick = () => {
+  const closeClickCb = () => {
     SelfWS.close()
   }
 
@@ -111,69 +100,19 @@ export default function ChatSelf() {
   return (
     <div className={'h-auto p-4'}>
 
+      <InputBox input={input} inputChange={inputBoxCb} sendClick={sendClickCb} closeClick={closeClickCb} />
+      <ChatBox>
+        <Title title={'SelfTalk'} />
+        <TimeSpan />
+        {
+          msgList.map((msg, index) => {
+            return msg.from === currentId ?
+              <SentBox key={index} msg={msg.body} /> :
 
-      <div className={'space-x-4 flex justify-center items-center m-4 rounded rounded-md'}>
-
-        <input id={'sendInput'} type={'text'} className={'ring-gray-200 ring-2 rounded focus:outline-none focus:ring-3 focus:ring-blue-500 h-10'} value={input || ''} onChange={onInputChange} />
-
-        <button type={'button'} className={'bg-blue-300 hover:bg-blue-400 rounded p-1'} onClick={sendClick}>send</button>
-
-        <button type={'button'} className={'bg-red-300 hover:bg-red-400 rounded p-1'} onClick={closeClick}>close</button>
-      </div>
-
-      <div className={'bg-indigo-100 flex flex-row justify-around items-center p-2 rounded rounded-md'}>
-
-        {/* SelfTalk */}
-        <div className={'bg-gray-100 h-full flex flex-col w-96 rounded rounded-md overflow-auto'}>
-          <Title title={'SelfTalk'} />
-
-          <TimeSpan />
-          {
-            msgList.map((msg, index) => {
-              return msg.from === currentId ?
-                <SentBox key={index} msg={msg.body} /> :
-
-                <ReceivedBox key={index} msg={msg.body} />
-            })
-          }
-
-        </div>
-      </div>
+              <ReceivedBox key={index} msg={msg.body} />
+          })
+        }
+      </ChatBox>
     </div>
-  )
-}
-
-/* ================================================================ components ================================================================ */
-function SentBox(props) {
-  return (
-    <div className={'flex m-2 justify-end items-center'}>
-      <div className={'bg-green-300 p-2 rounded rounded-md shadow-xm'}>{props.msg}</div>
-    </div>
-  )
-}
-
-function ReceivedBox(props) {
-  const {msg} = props
-  return (
-    <div className={'flex m-2 justify-start items-center'}>
-      <div className={'bg-white p-2 rounded rounded-md shadow-xm'}>{msg}</div>
-    </div>
-  )
-}
-
-function Title(props) {
-  return (
-    <div className={'bg-gray-200 p-2 text-center text-lg font-semibold'}>{props.title}</div>
-  )
-}
-
-function TimeSpan() {
-  const computeTime = () => {
-    const date = new Date();
-    const time = date.toLocaleDateString()
-    return time
-  }
-  return (
-    <div className={'flex justify-center items-center p-2 text-gray-700 text-xs'}>{computeTime()}</div>
   )
 }

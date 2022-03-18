@@ -14,10 +14,10 @@ function App() {
           <div className={'bg-blue-400 text-gray-100 p-3 rounded hover:bg-blue-600'}>Self</div>
         </NavLink>
         <NavLink to={'/one'} >
-          <div className={'bg-blue-400 text-gray-100 p-3 rounded hover:bg-blue-600'}>toOne</div>
+          <div className={'bg-blue-400 text-gray-100 p-3 rounded hover:bg-blue-600'}>ToOne</div>
         </NavLink>
         <NavLink to={'/many'} >
-          <div className={'bg-blue-400 text-gray-100 p-3 rounded hover:bg-blue-600'}>toMany</div>
+          <div className={'bg-blue-400 text-gray-100 p-3 rounded hover:bg-blue-600'}>ToMany</div>
         </NavLink>
       </div>
 

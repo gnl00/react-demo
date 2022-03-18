@@ -1,4 +1,4 @@
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App";
 import ChatSelf from "./pages/chatSelf/ChatSelf";
 import ChatOne from "./pages/chatOne/ChatOne";
