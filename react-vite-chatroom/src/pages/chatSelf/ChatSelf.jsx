@@ -1,7 +1,9 @@
 import './ChatSelf.css'
-import emitter from "../../util/EmitterUtils";
 import SelfWS from "../../websocket/SelfWS";
 import { buildMsg } from "../../util/MessageUtils";
+import { useContext, useEffect, useState } from "react";
+import { ChatBox, InputBox, ReceivedBox, SentBox, TimeSpan, Title } from "../../components/chat/Chat";
+import { topContext } from "../topLayout/TopLayout";
 
 // 消息样式
 // const msgObj = {
@@ -14,15 +16,14 @@ import { buildMsg } from "../../util/MessageUtils";
 //   read: false,
 // }
 
-import {useEffect, useState} from "react";
-import {ChatBox, InputBox, ReceivedBox, SentBox, TimeSpan, Title} from "../../components/chat/Chat";
-
 export default function ChatSelf() {
 
   /* ================================================================ consts ================================================================ */
-  const from = '111111'
-  const to = '222222'
-  const SELF_EMITTER_EVENT = 'self'
+  const to = 'websocket-server'
+
+  /* ================================================================ context ================================================================ */
+
+  const {uid, users, messages} = useContext(topContext);
 
   /* ================================================================ states ================================================================ */
   const [currentId, setCurrentId] = useState()
@@ -30,7 +31,7 @@ export default function ChatSelf() {
   const [receive, setReceive] = useState()
   const [msgList, setMsgList] = useState([
     {
-      from,
+      from: uid,
       to,
       date: new Date(),
       type: 'string',
@@ -39,7 +40,7 @@ export default function ChatSelf() {
     },
     {
       from: to,
-      to: from,
+      to: uid,
       date: new Date(),
       type: 'string',
       body: 'Hi ~',
@@ -49,15 +50,17 @@ export default function ChatSelf() {
 
   /* ================================================================ useEffects ================================================================ */
   useEffect(() => {
-    setCurrentId(from)
+    console.log(uid, users, messages)
+
+    setCurrentId(uid)
 
     // 挂载的时候进行事件监听
-    console.log('add emitter listeners')
-    emitter.addListener(SELF_EMITTER_EVENT, message => onMessage(message))
+    // console.log('add emitter listeners')
+    // emitter.addListener(SELF_EMITTER_EVENT, message => onMessage(message))
 
     return () => {
-      console.log('remove emitter listeners')
-      emitter.removeListener(SELF_EMITTER_EVENT, message => {})
+      // console.log('remove emitter listeners')
+      // emitter.removeListener(SELF_EMITTER_EVENT, message => {})
     }
   }, [])
 
@@ -71,9 +74,9 @@ export default function ChatSelf() {
   }, [receive])
 
   /* ================================================================ functions ================================================================ */
-  const onMessage = message => {
-    setReceive(message)
-  }
+  // const onMessage = message => {
+  //   setReceive(message)
+  // }
 
   const inputBoxCb = val => {
     setInput(val)
@@ -82,7 +85,7 @@ export default function ChatSelf() {
   const sendClickCb = () => {
     if (input) {
       // 构建消息
-      const finalMsg = buildMsg({from, to, body: input})
+      const finalMsg = buildMsg({from: currentId, to, body: input})
       setMsgList([
         ...msgList,
         finalMsg

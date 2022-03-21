@@ -1,5 +1,6 @@
 import './App.css'
 import {NavLink, Outlet} from "react-router-dom";
+import TopLayout from "./pages/topLayout/TopLayout";
 
 function App() {
   return (
@@ -10,9 +11,6 @@ function App() {
       </div>
 
       <div className={'mt-10 h-full w-full p-4 bg-pink-200 flex justify-center items-center space-x-4'}>
-        <NavLink to={'/self'} >
-          <div className={'bg-blue-400 text-gray-100 p-3 rounded hover:bg-blue-600'}>Self</div>
-        </NavLink>
         <NavLink to={'/one'} >
           <div className={'bg-blue-400 text-gray-100 p-3 rounded hover:bg-blue-600'}>ToOne</div>
         </NavLink>
@@ -21,7 +19,9 @@ function App() {
         </NavLink>
       </div>
 
-      <Outlet />
+      <TopLayout>
+        <Outlet />
+      </TopLayout>
     </div>
   )
 }

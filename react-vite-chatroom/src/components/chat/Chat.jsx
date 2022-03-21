@@ -25,8 +25,8 @@ function InputBox(props) {
 
 function ChatBox(props) {
   return (
-    <div className={'bg-indigo-100 h-full flex flex-row justify-around items-center p-2 rounded rounded-md'}>
-      <div className={'bg-gray-100 h-full flex flex-col w-96 rounded rounded-md overflow-auto'}>
+    <div className={'bg-indigo-100 h-auto flex flex-row justify-around items-center p-2 rounded rounded-md'}>
+      <div className={'bg-gray-100 h-auto flex flex-col w-96 rounded rounded-md overflow-auto'}>
         {props.children}
       </div>
     </div>
@@ -67,11 +67,50 @@ function ReceivedBox(props) {
   )
 }
 
+function OnLineBox(props) {
+  const {users, chatCb} = props
+  return (
+    <div className={'space-y-4 m-2 p-4'}>
+      <div className={'h-full w-full bg-yellow-200 p-2 flex justify-center items-center rounded'}>
+        <div className={'w-80 h-auto bg-gray-100'}>
+          <div className={'bg-gray-200 p-2 text-lg font-semibold text-center'}>Online Users ({users ? users.length : 0})</div>
+          {
+            users ?
+              users.map((item, index) => {
+                return (
+                  <UserCard userId={item} chatCb={chatCb} key={index} />
+                )
+              }) : <></>
+          }
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function UserCard(props) {
+  const {userId, chatCb} = props
+
+  const chatClick = () => {
+    chatCb(userId)
+  }
+
+  return (
+    <div className={'bg-white m-2 p-1 rounded flex items-center'}>
+      <div className={'bg-indigo-200 p-2 m-2 w-auto rounded'}>{userId}</div>
+      <div className={'flex-1 flex justify-end'}>
+        <div className={'bg-green-200 p-3 rounded hover:bg-green-300'} onClick={chatClick}>Chat</div>
+      </div>
+    </div>
+  )
+}
+
 export {
   InputBox,
   ChatBox,
   Title,
   TimeSpan,
   SentBox,
-  ReceivedBox
+  ReceivedBox,
+  OnLineBox
 }

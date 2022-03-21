@@ -1,6 +1,6 @@
 import { onOpen, onClose, onError, onMessage } from './WSUtils'
 
-const SelfWS = new WebSocket('ws://192.168.137.1:8888/chat/self')
+const SelfWS = new WebSocket('ws://localhost:8888/chat/self')
 
 const emitter_event = 'self'
 

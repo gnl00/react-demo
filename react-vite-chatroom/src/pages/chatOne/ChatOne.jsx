@@ -1,56 +1,62 @@
 import './ChatOne.css'
 import ToOneWS from "../../websocket/ToOneWS";
-import emitter from "../../util/EmitterUtils";
-import {ChatBox, InputBox, ReceivedBox, SentBox, TimeSpan, Title} from "../../components/chat/Chat";
-import { useEffect, useState } from "react";
+import {ChatBox, InputBox, OnLineBox, ReceivedBox, SentBox, TimeSpan, Title} from "../../components/chat/Chat";
+import {useContext, useEffect, useState} from "react";
 import { buildMsg } from "../../util/MessageUtils";
 
+import { topContext } from "../topLayout/TopLayout";
+
+// 消息样式
+// const msgObj = {
+//   from: '',
+//   to: '',
+//   date: '',
+//   bodyType: 'text',
+//   body: '',
+//   msgType: 'initial | update | contact',
+//   read: false,
+// }
+
 export default function ChatOne() {
+
   /* ================================================================ consts ================================================================ */
-  const EMITTER_EVENT = 'toOne'
+  const defaultTo = 'websocket-server'
 
   /* ================================================================ states ================================================================ */
-  const [initialState, setInitialState] = useState(true)
+  const [title, setTitle] = useState('SelfTalk')
+
   const [currentId, setCurrentId] = useState(null)
-  const [receiverId, setReceiverId] = useState(null)
-  const [title, setTitle] = useState('ToOne')
+  const [receiverId, setReceiverId] = useState(defaultTo)
+
   const [input, setInput] = useState()
+
+  const [users, setUsers] = useState([])
+
   const [msgList, setMsgList] = useState([])
-  const [onlineUsers, setOnlineUsers] = useState([])
-  const [receive, setReceive] = useState()
+
+  /* ================================================================ context ================================================================ */
+  const {uid, users: online, message} = useContext(topContext);
 
   /* ================================================================ useEffects ================================================================ */
   useEffect(() => {
-    console.log('toOne addListener')
-    emitter.addListener(EMITTER_EVENT, message => onMessage(message))
+    console.log(uid, online ,message)
 
-    // emitter.prependListener()
+    setCurrentId(uid)
+    setUsers(online)
 
-    return () => {
-      console.log('toOne removeListener')
-      emitter.removeListener(EMITTER_EVENT, message => {})
-    }
-  }, [])
+    if (message) {
+      const from = message.from
+      setTitle(from)
+      setReceiverId(from)
 
-  useEffect(() =>{
-    if (initialState) {
-      // console.log('Update initial state')
-      setInitialState(prevState => {
-        // console.log('prevState: ', prevState)
-        // console.log('afterState: ', !initialState)
-        return !initialState
-      })
-    }
-  }, [currentId])
-
-  useEffect(() => {
-    if (receive) {
       setMsgList([
         ...msgList,
-        receive
+        message
       ])
     }
-  }, [receive])
+
+  }, [uid, online, message])
+
 
   /* ================================================================ functions ================================================================ */
   const inputChange = val => {
@@ -59,9 +65,7 @@ export default function ChatOne() {
 
   const sendClickCb = () => {
     // console.log(receiverId)
-    if (!receiverId) {
-      alert('please chose a receiver first')
-    } else if (input) {
+    if (input) {
       // 构建消息
       const finalMsg = buildMsg({from: currentId, to: receiverId, body: input})
       setMsgList([
@@ -69,7 +73,6 @@ export default function ChatOne() {
         finalMsg
       ])
       const jsonStr = JSON.stringify(finalMsg);
-      console.log(jsonStr)
       ToOneWS.send(jsonStr)
     }
 
@@ -85,36 +88,14 @@ export default function ChatOne() {
     // console.log('chat with ', uid)
     setTitle(uid)
     setReceiverId(uid)
-  }
-
-  let initial = initialState
-  const onMessage = message => {
-    console.log('messages ', message)
-
-    if (initial) {
-      // 第一条消息，主要接收一些初始化信息
-      const {uid, online} = message;
-      setCurrentId(uid)
-      setOnlineUsers(online)
-      initial = !initial
-      // 初始化完成，直接 return
-      return
-    }
-
-    if (!receiverId) {
-      setTitle(message.from)
-      setReceiverId(message.from)
-    }
-    // console.log(receiverId)
-    setReceive(message)
-
+    setMsgList([])
   }
 
   /* ================================================================ render ================================================================ */
   return (
     <div className={'h-auto p-4 flex'}>
       <div className={'flex-1'}>
-        <OnLineBox onlineUsers={onlineUsers} chatCb={chatCb} currentId={currentId} />
+        <OnLineBox users={users} chatCb={chatCb} />
       </div>
 
       <div className={'flex-1'}>
@@ -136,49 +117,4 @@ export default function ChatOne() {
 
     </div>
     )
-}
-
-function OnLineBox(props) {
-  const {onlineUsers, chatCb, currentId} = props
-  return (
-    <div className={'space-y-4 m-2 p-4'}>
-      <div className={'h-full w-full bg-yellow-200 p-2 flex justify-center items-center rounded'}>
-        <div className={'bg-blue-300 m-4 p-8 text-3xl font-mono font-bold rounded'}>{currentId}</div>
-        <div className={'w-80 h-auto bg-gray-100'}>
-          <div className={'bg-gray-200 p-2 text-lg font-semibold text-center'}>Online Users ({onlineUsers ? onlineUsers.length : 0})</div>
-          {
-            onlineUsers ?
-              onlineUsers.map((item, index) => {
-                return (
-                  <UserCard userId={item} chatCb={chatCb} key={index} />
-                )
-              }) : <></>
-          }
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function UserCard(props) {
-  const {userId, chatCb} = props
-
-  const chatClick = () => {
-    chatCb(userId)
-  }
-
-  return (
-    <div className={'bg-white m-2 p-1 rounded flex items-center'}>
-      <div className={'bg-indigo-200 p-2 m-2 w-auto rounded'}>{userId}</div>
-      <div className={'flex-1 flex justify-end'}>
-        <div className={'bg-green-200 p-3 rounded hover:bg-green-300'} onClick={chatClick}>Chat</div>
-      </div>
-    </div>
-  )
-}
-
-function MessageBox(props) {
-  return (
-    <div></div>
-  )
 }
