@@ -1,6 +1,6 @@
 import { onOpen, onClose, onError, onMessage } from './WSUtils'
 
-const ToManyWS = new WebSocket('ws://localhost:8888/chat/oneToMany')
+const ToManyWS = new WebSocket('ws://192.168.137.1:8888/chat/oneToMany')
 
 const emitter_event = 'toMany'
 
@@ -15,6 +15,7 @@ ToManyWS.onclose = (evt) => {
 }
 
 ToManyWS.onerror = (evt) => {
+  ToManyWS.close()
   onError('toOneWS', evt)
 }
 

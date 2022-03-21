@@ -1,9 +1,9 @@
-export const buildMsg = ({from, to, date = new Date().getTime(), type = 'string', body, read = false}) => {
+export const buildMsg = ({from, to, date = new Date().getTime(), bodyType = 'text', body, read = false}) => {
   return {
     from,
     to,
     date,
-    type,
+    bodyType,
     body,
     read,
   }

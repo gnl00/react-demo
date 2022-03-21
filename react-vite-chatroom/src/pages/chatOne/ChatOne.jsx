@@ -10,7 +10,7 @@ export default function ChatOne() {
   const EMITTER_EVENT = 'toOne'
 
   /* ================================================================ states ================================================================ */
-  const [initial, setInitial] = useState(true)
+  const [initialState, setInitialState] = useState(true)
   const [currentId, setCurrentId] = useState(null)
   const [receiverId, setReceiverId] = useState(null)
   const [title, setTitle] = useState('ToOne')
@@ -24,11 +24,24 @@ export default function ChatOne() {
     console.log('toOne addListener')
     emitter.addListener(EMITTER_EVENT, message => onMessage(message))
 
+    // emitter.prependListener()
+
     return () => {
       console.log('toOne removeListener')
       emitter.removeListener(EMITTER_EVENT, message => {})
     }
   }, [])
+
+  useEffect(() =>{
+    if (initialState) {
+      // console.log('Update initial state')
+      setInitialState(prevState => {
+        // console.log('prevState: ', prevState)
+        // console.log('afterState: ', !initialState)
+        return !initialState
+      })
+    }
+  }, [currentId])
 
   useEffect(() => {
     if (receive) {
@@ -74,32 +87,34 @@ export default function ChatOne() {
     setReceiverId(uid)
   }
 
+  let initial = initialState
   const onMessage = message => {
-    console.log(message)
-    console.log(receiverId)
+    console.log('messages ', message)
+
     if (initial) {
-      // 第一条消息，主要接收一些初始化信息，不用设置到 setReceive
+      // 第一条消息，主要接收一些初始化信息
       const {uid, online} = message;
       setCurrentId(uid)
       setOnlineUsers(online)
-      setInitial(false)
-    } else {
-      if (!receiverId) {
-        const jsonMsg = JSON.parse(message)
-        console.log(jsonMsg)
-        setReceiverId(jsonMsg.from)
-      }
-
-      setReceive(message)
+      initial = !initial
+      // 初始化完成，直接 return
+      return
     }
+
+    if (!receiverId) {
+      setTitle(message.from)
+      setReceiverId(message.from)
+    }
+    // console.log(receiverId)
+    setReceive(message)
+
   }
 
   /* ================================================================ render ================================================================ */
   return (
     <div className={'h-auto p-4 flex'}>
-
       <div className={'flex-1'}>
-        <OnLineBox onlineUsers={onlineUsers} chatCb={chatCb} />
+        <OnLineBox onlineUsers={onlineUsers} chatCb={chatCb} currentId={currentId} />
       </div>
 
       <div className={'flex-1'}>
@@ -124,10 +139,11 @@ export default function ChatOne() {
 }
 
 function OnLineBox(props) {
-  const {onlineUsers, chatCb} = props
+  const {onlineUsers, chatCb, currentId} = props
   return (
     <div className={'space-y-4 m-2 p-4'}>
       <div className={'h-full w-full bg-yellow-200 p-2 flex justify-center items-center rounded'}>
+        <div className={'bg-blue-300 m-4 p-8 text-3xl font-mono font-bold rounded'}>{currentId}</div>
         <div className={'w-80 h-auto bg-gray-100'}>
           <div className={'bg-gray-200 p-2 text-lg font-semibold text-center'}>Online Users ({onlineUsers ? onlineUsers.length : 0})</div>
           {

@@ -8,8 +8,9 @@ import { buildMsg } from "../../util/MessageUtils";
 //   from: '',
 //   to: '',
 //   date: '',
-//   type: 'string',
+//   bodyType: 'text',
 //   body: '',
+//   msgType: 'initial | update | contact',
 //   read: false,
 // }
 
