@@ -1,5 +1,4 @@
 import './ChatOne.css'
-import ToOneWS from "../../websocket/ToOneWS";
 import {ChatBox, InputBox, OnLineBox, ReceivedBox, SentBox, TimeSpan, Title} from "../../components/chat/Chat";
 import {useContext, useEffect, useState} from "react";
 import { buildMsg } from "../../util/MessageUtils";
@@ -73,7 +72,7 @@ export default function ChatOne() {
         finalMsg
       ])
       const jsonStr = JSON.stringify(finalMsg);
-      ToOneWS.send(jsonStr)
+      // ToOneWS.send(jsonStr)
     }
 
     // 发送完成 input 置空
@@ -81,7 +80,7 @@ export default function ChatOne() {
   }
 
   const closeClickCb= () => {
-    ToOneWS.close()
+    // ToOneWS.close()
   }
 
   const chatCb = uid => {

@@ -1,8 +1,8 @@
 import './TopLayout.css'
 import emitter from "../../util/EmitterUtils";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, createContext } from "react";
 
-export const topContext = React.createContext()
+export const topContext = createContext(null)
 
 export default function TopLayout(props) {
 

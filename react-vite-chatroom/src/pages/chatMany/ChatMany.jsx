@@ -4,7 +4,6 @@ import { topContext } from "../topLayout/TopLayout";
 import {useContext, useEffect, useState} from "react";
 import {TimeSpan} from "../../components/chat/Chat";
 
-import ToManyWS from "../../websocket/ToManyWS";
 import {buildMsg} from "../../util/MessageUtils";
 
 export default function ChatMany() {
@@ -62,7 +61,7 @@ export default function ChatMany() {
 
       const msgObj = buildMsg({from: currentId, to: 'groupId', body: inputVal})
 
-      ToManyWS.send(JSON.stringify(msgObj))
+      // ToManyWS.send(JSON.stringify(msgObj))
     }
   }
 

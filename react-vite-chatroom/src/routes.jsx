@@ -8,8 +8,8 @@ const AppRoutes = () => {
     <BrowserRouter>
       <Routes>
         <Route path={'/'} element={<App />} >
-          <Route path={'/one'} element={<ChatOne />} />
-          <Route path={'/many'} element={<ChatMany />} />
+          {/*<Route path={'/one'} element={<ChatOne />} />*/}
+          {/*<Route path={'/many'} element={<ChatMany />} />*/}
         </Route>
       </Routes>
     </BrowserRouter>
