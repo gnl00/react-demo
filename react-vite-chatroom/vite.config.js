@@ -17,11 +17,10 @@ export default defineConfig({
     // host: '0.0.0.0'
     proxy: {
       // vite 跨域 https://blog.csdn.net/weixin_44698285/article/details/116199292
-      '^/api': {
+      '/api': {
         target: 'http://localhost:8888/chat',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '')
-
       }
     }
   }

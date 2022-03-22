@@ -1,0 +1,30 @@
+@tailwind components;
+
+@layer components {
+    #title {
+        transition-timing-function: ease-in-out;
+        transition-duration: 1s;
+    }
+
+    #title:hover {
+        transform: scale3d(1.5, 1.5, 1.2);
+    }
+
+    .loginIpt {
+        transition-timing-function: ease-in-out;
+        transition-duration: .5s;
+    }
+    .loginIpt:hover {
+        transform: scale3d(1.1, 1.2, 1.2);
+    }
+
+    #loginBtn {
+        transition-timing-function: ease-in-out;
+        transition-duration: .5s;
+    }
+
+    #loginBtn:hover {
+        transform: scale3d(1.1, 1.2, 1.2);
+    }
+}
+
