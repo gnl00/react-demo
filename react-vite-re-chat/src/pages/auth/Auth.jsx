@@ -1,6 +1,6 @@
-import {createContext, useEffect, useState} from "react";
-import {useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 /* ================================================= context =========================================================*/
 // export const Context = createContext(null)
@@ -13,9 +13,6 @@ export default function Auth(props) {
   /* ================================================= router =========================================================*/
   const navigate = useNavigate();
 
-  /* ================================================= state =========================================================*/
-  const [webSocket, setWebSocket] = useState(null)
-
   /* ================================================= useEffect =========================================================*/
   useEffect(() => {
     authCheck()
@@ -24,7 +21,6 @@ export default function Auth(props) {
   /* ================================================= function =========================================================*/
   const authCheck = () => {
     // console.log(isAuth)
-
     // 未登录，跳转到登录页
     if (!isAuth) {
       navigate('/login')

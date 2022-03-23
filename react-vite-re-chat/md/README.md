@@ -14,7 +14,7 @@ vite | react | react-router-dom | WebSocket | events | tailwind CSS
 
 <img src="./assets/组件嵌套关系.png">
 
-上部分代码，关键就在`<Auth>`层
+上部分代码，关键就在`<Auth>`和`<Chat>`层
 ```js
 // routes.jsx
 <BrowserRouter>
@@ -34,30 +34,50 @@ vite | react | react-router-dom | WebSocket | events | tailwind CSS
 
 ```js
 // Auth.jsx
-import {createContext, useState} from "react";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function Auth(props) {
-  const Context = createContext(null)
 
-  // 从 store 中获取登录状态
-  const [isAuth, setIsAuth] = useState(false);
-  const [webSocket, setWebSocket] = useState(null)
-  
-  if (isAuth) {
-    // 登录后才进行 websoket 连接
-    const ws = "@/network/websocket/websocket";
-    setWebSocket(ws)
+  // 从 redux 中获取登录状态
+  const isAuth = useSelector(state => state.isAuth)
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    authCheck()
+  }, [])
+
+  const authCheck = () => {
+    // 未登录，跳转到登录页
+    if (!isAuth) {
+      navigate('/login')
+    }
+    
+    // 已登录状态才会加载子组件
   }
-  return (
-    <Context.Provider value={webSocket}>
-      { isAuth ? props.children : <></> }
-    </Context.Provider>
-  )
+  return ( <div> { isAuth ? props.children : <></> } </div> )
 }
 ```
 
-首先默认进入`<Login>`，登录成功将授权状态保存到 store 中，再 Redirect 到 `/`。
-同时`<Auth>`检查登录状态，已授权才会连接 websocket
+```js
+// Chat.jsx
+import {useEffect} from "react";
+export default function Chat() {
+  console.log('auth success, load Chat page')
+
+  useEffect(() => {
+    openWebsocket().then(res => {
+      console.log('opening websocket')
+    }).catch(err => {
+      console.log('open websocket error: ', err.message)
+    })
+  }, [])
+
+  const openWebsocket = () => import('@/network/websocket/websocket')
+  return ( <div></div> )
+}
+```
 
 ####组件封装
 先将界面大概描绘出来
