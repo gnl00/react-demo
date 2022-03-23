@@ -1,24 +1,41 @@
-import {createContext, useState} from "react";
+import {createContext, useEffect, useState} from "react";
+import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+
+/* ================================================= context =========================================================*/
+// export const Context = createContext(null)
 
 export default function Auth(props) {
 
-  const Context = createContext(null)
+  /* ================================================= redux =========================================================*/
+  const isAuth = useSelector(state => state.isAuth)
 
-  const [isAuth, setIsAuth] = useState(false);
+  /* ================================================= router =========================================================*/
+  const navigate = useNavigate();
+
+  /* ================================================= state =========================================================*/
   const [webSocket, setWebSocket] = useState(null)
 
-  console.log('auth load')
+  /* ================================================= useEffect =========================================================*/
+  useEffect(() => {
+    authCheck()
+  }, [])
 
-  if (isAuth) {
-    const ws = "@/network/websocket/websocket";
-    setWebSocket(ws)
+  /* ================================================= function =========================================================*/
+  const authCheck = () => {
+    // console.log(isAuth)
+
+    // 未登录，跳转到登录页
+    if (!isAuth) {
+      navigate('/login')
+    }
+
   }
 
+  /* ================================================= render =========================================================*/
   return (
-    <Context.Provider value={webSocket}>
-      {
-        isAuth ? props.children : <></>
-      }
-    </Context.Provider>
+    <div>
+      { isAuth ? props.children : <></> }
+    </div>
   )
 }

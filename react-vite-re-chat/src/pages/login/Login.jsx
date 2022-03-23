@@ -1,13 +1,23 @@
 import './Login.css'
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {login} from "../../network/request/login";
+import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {setAuthAction} from "../../redux/action/user/userActions";
 
 export default function Login() {
 
+  /* ================================================= redux =========================================================*/
+  const dispatch = useDispatch()
+
+  /* ================================================= router =========================================================*/
+  const navigate = useNavigate();
+
+  /* ================================================= state =========================================================*/
   const [account, setAccount] = useState('');
   const [password, setPassword] = useState('');
-  const [auth, setAuth] = useState(false)
 
+  /* ================================================= function =========================================================*/
   const accountChange = evt => {
     setAccount(evt.target.value)
   }
@@ -17,22 +27,25 @@ export default function Login() {
   }
 
   const loginClick = () => {
+    if (account && password) {
+      login({account, password})
+        .then(res => {
+          if (res) {
+            dispatch(setAuthAction(res))
 
-    login({account, password})
-      .then(res => {
-        console.log('res ===> ', res)
-        if (res) {
-          setAuth(res)
-        }
-      }).catch(err => {
-      console.log(err)
-    })
+            navigate('/')
+          }
+        }).catch(err => {
+        console.log(err)
+      })
 
-    setAccount('')
-    setPassword('')
+      // 输入框置空
+      setAccount('')
+      setPassword('')
+    }
   }
 
-
+  /* ================================================= render =========================================================*/
   return (
     <div className={'font-mono'}>
       <div className={'flex justify-center items-center font-bold text-3xl'}>
