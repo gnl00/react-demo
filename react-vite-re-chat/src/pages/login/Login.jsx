@@ -4,6 +4,7 @@ import {login} from "../../network/request/login";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {setAuthAction} from "../../redux/action/user/userActions";
+import NotchCard from "../../components/notchCard/NotchCard";
 
 export default function Login() {
 
@@ -48,11 +49,7 @@ export default function Login() {
   /* ================================================= render =========================================================*/
   return (
     <div className={'font-mono'}>
-      <div className={'flex justify-center items-center font-bold text-3xl'}>
-        <span id={'title'} className={'shadow-md p-2 rounded w-96 text-center text-gray-600'}>
-          Chat-Room
-        </span>
-      </div>
+      <NotchCard />
 
       <div className={'w-full h-full mt-64 flex flex-col justify-center items-center space-y-6'}>
         <div>

@@ -1,9 +1,9 @@
-import instance from "../../util/axios/axios";
+import instance from "../axios/axios";
 
 export const login = (params) => {
   return instance({
     method: 'post',
-    url: 'login',
+    url: '/user/login',
     data: params,
   })
 }

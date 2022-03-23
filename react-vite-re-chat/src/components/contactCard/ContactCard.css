@@ -1,0 +1,12 @@
+@tailwind components;
+
+@layer components {
+    .contact-list {
+        transition-timing-function: ease-in-out;
+        transition-duration: .5s;
+    }
+
+    .contact-list:hover {
+        transform: scale(1.1);
+    }
+}

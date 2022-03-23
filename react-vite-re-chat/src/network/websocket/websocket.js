@@ -4,4 +4,9 @@ ws.onopen = () => {
   console.log('ws opened')
 }
 
+ws.onclose = () => {
+  // do some cleanup works
+  console.log('ws closed')
+}
+
 export default ws

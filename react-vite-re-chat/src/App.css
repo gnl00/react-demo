@@ -1,2 +1,7 @@
-.App {
+@tailwind components;
+
+@layer components {
+    .App {
+        @apply font-mono font-semibold
+    }
 }

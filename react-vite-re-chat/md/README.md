@@ -4,6 +4,10 @@
 ##相关技术
 vite | react | react-router-dom | WebSocket | events | tailwind CSS
 
+##步骤
+1、搭建基本框架
+2、页面编写，组件封装
+
 ##前言
 <br /> 1、在用户未授权/未登录成功之前不打开 websocket 链接，如何实现？（WebSocket 动态连接）
 <br /> 2、页面如何拆分，组件如何封装？
