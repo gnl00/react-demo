@@ -1,12 +1,32 @@
-const ws = new WebSocket('ws://localhost:8888/chat')
+const urlPrefix = 'ws://localhost:8888/chat/'
 
-ws.onopen = () => {
-  console.log('ws opened')
+let ws = null
+const openWebsocket = (uid) => {
+  const url = urlPrefix + uid
+
+  // console.log(url)
+
+  ws = new WebSocket(url)
+
+  if (ws) {
+    websocketInitial(ws)
+    return true
+  }
+
 }
 
-ws.onclose = () => {
-  // do some cleanup works
-  console.log('ws closed')
+const websocketInitial = (ws) => {
+  ws.onopen = () => {
+    console.log('ws opened')
+  }
+
+  ws.onclose = () => {
+    // do some cleanup works
+    console.log('ws closed')
+  }
 }
 
-export default ws
+export {
+  openWebsocket,
+  ws
+}

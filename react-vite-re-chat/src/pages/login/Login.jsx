@@ -1,9 +1,9 @@
 import './Login.css'
 import {useState} from "react";
-import {login} from "../../network/request/login";
+import { login } from "../../network/request/user";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
-import {setAuthAction} from "../../redux/action/user/userActions";
+import {setAuthAction, setUserInfoAction} from "../../redux/action/user/userActions";
 import NotchCard from "../../components/notchCard/NotchCard";
 
 export default function Login() {
@@ -31,8 +31,10 @@ export default function Login() {
     if (account && password) {
       login({account, password})
         .then(res => {
+
+          // 登录成功
           if (res) {
-            dispatch(setAuthAction(res))
+            dispatch(setUserInfoAction({uid: account, isAuth: res}))
 
             navigate('/')
           }

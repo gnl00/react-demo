@@ -20,6 +20,7 @@ export default function Auth(props) {
 
   /* ================================================= function =========================================================*/
   const authCheck = () => {
+
     // console.log(isAuth)
     // 未登录，跳转到登录页
     if (!isAuth) {
