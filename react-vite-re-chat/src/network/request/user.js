@@ -9,12 +9,8 @@ export const login = (params) => {
 }
 
 export const getContactList = (params) => {
-  return [
-    { uid: 'a' },
-    { uid: 'b' },
-    { uid: 'c' },
-    { uid: 'd' },
-    { uid: 'e' },
-    { uid: 'f' },
-  ]
+  return instance({
+    method: 'get',
+    url: '/user/contacts'
+  })
 }

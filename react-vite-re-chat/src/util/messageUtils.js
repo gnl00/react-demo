@@ -1,4 +1,4 @@
-export function buildMessage({from, to, body, type, time}) {
+export function buildMessage({from, to, body, type, date, read = false}) {
   return {
     from,
     to,
@@ -6,6 +6,7 @@ export function buildMessage({from, to, body, type, time}) {
     body,
     // string || binary
     type,
-    time,
+    date,
+    read
   }
 }
