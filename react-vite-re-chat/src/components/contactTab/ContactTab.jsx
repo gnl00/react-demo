@@ -17,28 +17,17 @@ export default function () {
 
   }, []);
 
-
   return (
-    <div className={'bg-blue-100 p-5'}>
+    <div>
 
-      {/*<div className={'bg-white flex justify-start items-center p-2'}>*/}
-      {/*  <div className={'bg-gray-100 p-2'} onClick={() => tabOpen(1)}>label 1</div>*/}
-      {/*  <div className={'bg-gray-100 p-2'} onClick={() => tabOpen(2)}>label 222</div>*/}
-      {/*  <div className={'bg-gray-100 p-2'} onClick={() => tabOpen(3)}>label 333</div>*/}
-      {/*</div>*/}
-
-      {/*<div>*/}
-      {/*  <div className={(tabIndex === 1 ? '' : 'hidden')}>content 111</div>*/}
-      {/*  <div className={(tabIndex === 2 ? '' : 'hidden')}>content 222</div>*/}
-      {/*  <div className={(tabIndex === 3 ? '' : 'hidden')}>content 333</div>*/}
-      {/*</div>*/}
-
-      <Tabs name={'contactTab'} defaultIndex={1} >
-        <TabPane name={''} label={'tab1'} index={1}>1111</TabPane>
-        <TabPane name={''} label={'tab2'} index={2}>2222</TabPane>
-        <TabPane name={''} label={'tab3'} index={3}>3333</TabPane>
-        <TabPane name={''} label={'tab4'} index={4}>4444</TabPane>
-      </Tabs>
+      <div className={'bg-blue-100'}>
+        <Tabs name={'contactTab'} defaultIndex={1} >
+          <TabPane name={'tab'} label={'tab1'} index={1}>1111</TabPane>
+          <TabPane name={'tab'} label={'tab2'} index={2}>2222</TabPane>
+          <TabPane name={'tab'} label={'tab3'} index={3}>3333</TabPane>
+          <TabPane name={'tab'} label={'tab4'} index={4}>4444</TabPane>
+        </Tabs>
+      </div>
 
     </div>
   )
@@ -58,7 +47,7 @@ function Tabs(props) {
   }, [])
 
   return (
-    <div className={[name, 'flex relative'].join(' ')}>
+    <div className={[name, ''].join(' ')}>
       <tabContext.Provider value={{activeIndex, setActiveIndex}}>
         <div>{ props.children }</div>
       </tabContext.Provider>
@@ -85,10 +74,18 @@ function TabPane(props) {
 
   return (
     <div className={[name, ''].join(' ')}>
-      <div className={'bg-gray-100 p-2 hover:bg-gray-200 cursor-default'} onClick={() => tabClick(index)} >{label}</div>
-      <div className={[currentIndex === activeIndex ? '' : 'hidden', ''].join(' ')}>
-        {props.children}
+      <div className={'cursor-default flex'} onClick={() => tabClick(index)} >
+
+        <div className={'bg-gray-100 p-2 hover:bg-gray-200 pr-4'}>
+          {label}
+        </div>
+
+        <div className={[currentIndex === activeIndex ? '' : 'hidden', 'h-full w-full bg-yellow-100 fixed top-0 left-0 ml-12'].join(' ')}>
+          {props.children}
+        </div>
+
       </div>
+
     </div>
   )
 }
