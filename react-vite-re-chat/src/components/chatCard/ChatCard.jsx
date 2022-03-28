@@ -16,12 +16,18 @@ export default function ChatCard(props) {
   const [emojiVal, setEmojiVal] = useState(null)
   const [showEmoji, setShowEmoji] = useState(false)
 
+  // https://blog.csdn.net/culiu9261/article/details/107543860
   useEffect(() => {
-    console.log(messageEnd)
+    // console.log(messageEnd)
     if (messages && messages.length != 0) {
-      // const chatBoxDom = document.getElementById('chatBox')
+
+      const chatBoxDom = document.getElementById('chatBox')
       // const finalMsgBoxDom = document.getElementById('finalMsgBox')
-      // chatBoxDom.scrollIntoView()
+
+      if (messageEnd) {
+        chatBoxDom.scrollIntoView(messageEnd)
+      }
+
       // chatBoxDom.scrollIntoView(true)
       // console.log(chatBoxDom.offsetTop)
       // console.log(chatBoxDom.offsetHeight)
@@ -103,7 +109,7 @@ const SentMsgBox = forwardRef(((props, ref) => {
   const { message } = props
 
   return (
-    <div className={'flex justify-end items-start space-x-4 mb-4'}>
+    <div className={'flex justify-end items-start space-x-4 mb-4'} ref={ref}>
       <div className={'bg-blue-100 shadow p-1 max-w-5xl rounded h-auto'} style={{'wordBreak': 'break-all'}}>
         {message.body}
       </div>
@@ -116,7 +122,7 @@ const ReceivedMsgBox = forwardRef(((props, ref) => {
   const { message } = props
 
   return (
-    <div className={'flex justify-start items-start space-x-4 mb-4'}>
+    <div className={'flex justify-start items-start space-x-4 mb-4'} ref={ref}>
       <div className={'bg-gray-100 w-12 h-12 flex-shrink-0 flex justify-center items-center rounded cursor-default shadow'}>{message.from}</div>
       <div className={'shadow p-1 max-w-5xl rounded h-auto'}>
         {message.body}

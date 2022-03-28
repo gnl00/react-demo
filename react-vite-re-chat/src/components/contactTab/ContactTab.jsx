@@ -99,7 +99,7 @@ function TabPane(props) {
           {label}
         </div>
 
-        <div className={[currentIndex === activeIndex ? '' : 'hidden', 'h-full w-full bg-yellow-100 absolute top-0 left-20'].join(' ')}>
+        <div className={[currentIndex === activeIndex ? '' : 'hidden', 'h-full w-full bg-yellow-100 absolute top-0 ml-20'].join(' ')}>
           {props.children}
         </div>
 
