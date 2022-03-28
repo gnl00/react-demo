@@ -3,7 +3,7 @@ import {TabPane, Tabs} from "../contactTab/ContactTab";
 
 export default function ContactCard(props) {
 
-  const { contacts, functionClickCb, contactListClickCb } = props
+  const { contacts, unreadMessages, functionClickCb, contactListClickCb } = props
 
   const functionClick = (evt) => {
     // console.log('use for add friends or groups')
@@ -19,7 +19,7 @@ export default function ContactCard(props) {
       <div className={'p-2 bg-white'}>
         {
           contacts.map((contact, index) => {
-            return <ContactList contactListClickCb={contactListClickCb} key={index} contact={contact} />
+            return <ContactList key={index} contactListClickCb={contactListClickCb} contact={contact} unreadMessages={unreadMessages}  />
           })
         }
       </div>
@@ -29,7 +29,7 @@ export default function ContactCard(props) {
 
 function ContactList(props) {
 
-  const {contact, contactListClickCb} = props
+  const {contact, contactListClickCb, unreadMessages} = props
 
   const onItemClick = () => {
     contactListClickCb(contact.uid)
@@ -44,7 +44,9 @@ function ContactList(props) {
           <p className={'rounded max-w-sm truncate pl-1 text-gray-600'}>text text text text text text text text text text text text text text text text</p>
         </div>
         <div className={'ml-2 flex flex-col justify-around items-center space-y-2'}>
-          <div className={'rounded-full p-1 text-blue-400 bg-white ring-2 text-xs'}>99+</div>
+          {
+            unreadMessages && unreadMessages[contact.uid] ? <div className={'rounded-full p-1 text-blue-400 bg-white ring-2 text-xs'}>{unreadMessages[contact.uid].count}</div>  : <></>
+          }
           <div className={'text-gray-500 text-sm'}>18:30</div>
         </div>
       </div>

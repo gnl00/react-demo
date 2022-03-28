@@ -27,6 +27,9 @@ export default function Chat() {
   const [to, setTo] = useState(null)
   const [contacts, setContacts] = useState([])
   const [messages, setMessages] = useState([])
+  const [showChatInterface, setShowChatInterface] = useState(false)
+
+  const [unreadMessages, setUnReadMessages] = useState()
 
   /* ================================================= useEffect =========================================================*/
   useEffect(() => {
@@ -50,19 +53,65 @@ export default function Chat() {
   useEffect(() => {
     if (message) {
       const msgObj = JSON.parse(message)
-      console.log(msgObj)
+      // console.log(msgObj)
 
       setMessages([
         ...messages,
         msgObj
       ])
 
-      setTo(msgObj.from)
+      // setTo(msgObj.from)
+
+      // 接收到消息
+      // 当前聊天窗口对象和消息发送对象不一致才存入未读消息
+      if (to != msgObj.from) {
+        setUnReadMessages(prevState => {
+
+          let key = msgObj.from
+          let count = 0
+
+          // 已经存在 key
+          if (prevState && Object.keys(prevState).indexOf(key) !== -1) {
+            // 获取 unread count
+            count = prevState[key].count
+          }
+
+          count = count + 1
+
+          // 未存在 key，根据 key 创建对象
+          let obj = {
+            [key]: {
+              count
+            }
+          }
+
+          let nextState = null
+
+          if (prevState) {
+            nextState = {
+              ...prevState,
+              ...obj,
+            }
+          } else {
+            nextState = {
+              ...obj
+            }
+          }
+
+          // console.log(nextState)
+
+          return nextState
+        })
+      }
 
     }
   }, [message])
 
   useEffect(() => {
+
+    // remove local messages
+    localStorage.removeItem(uid)
+
     // save message to local
     localStorage.setItem(uid, JSON.stringify(messages))
   }, [messages])
@@ -104,6 +153,20 @@ export default function Chat() {
 
   const contactListClickCb = (toId) => {
     setTo(toId)
+
+    setShowChatInterface(true)
+
+    setUnReadMessages(prevState => {
+
+      let nextState = null
+
+      // 存在未读消息
+      if (prevState && Object.keys(prevState).indexOf(toId) != -1) {
+        // 打开聊天框的时候清空
+        nextState = Object.assign({}, prevState)
+        nextState[toId] = null
+      }
+    })
   }
 
   /* ================================================= function fetch =========================================================*/
@@ -135,13 +198,14 @@ export default function Chat() {
 
           <div className={'grid grid-cols-12 w-full h-full'}>
             <div className={'col-span-3 w-full h-full mt-2'}>
-              <ContactCard contacts={contacts} functionClickCb={functionClickCb} contactListClickCb={contactListClickCb} />
+              <ContactCard contacts={contacts} unreadMessages={unreadMessages} functionClickCb={functionClickCb} contactListClickCb={contactListClickCb} />
             </div>
 
             <div className={'col-span-9 p-2 mt-2 bg-white w-full h-auto'}>
               {
-                to ? <ChatCard uid={uid} title={to} sendClickCb={sendClickCb} messages={messages} /> :
-                  <div className={'bg-white shadow-lg w-full h-full flex justify-center items-center text-gray-700'}>
+                showChatInterface ?
+                  <ChatCard uid={uid} title={to} sendClickCb={sendClickCb} messages={messages} setShowChatInterface={setShowChatInterface}  /> :
+                  <div className={['bg-white shadow-lg w-full h-full flex justify-center items-center text-gray-700', !showChatInterface ? '' : 'hidden'].join(' ')}>
                     Pick one and chat
                   </div>
               }
