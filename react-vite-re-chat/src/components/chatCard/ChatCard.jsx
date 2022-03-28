@@ -1,12 +1,12 @@
 import './ChatCard.css'
-import {useState} from "react";
-import {useParams} from "react-router-dom";
+import {useEffect, useState} from "react";
 export default function ChatCard(props) {
 
-  let params = useParams();
-  console.log(params)
-
   const { uid, title, sendClickCb, messages = [] } = props
+
+  useEffect(() => {
+    // load local messages
+  }, [])
 
   return (
     <div className={'shadow-lg w-full h-full rounded text-gray-800 flex flex-col justify-between'}>
@@ -16,7 +16,11 @@ export default function ChatCard(props) {
       <div className={'w-full h-96 max-h-96 p-2 overflow-auto'}>
         {
           messages.map((message, index) => {
-            return message.from == uid ? <SentMsgBox message={message} key={index} /> : <ReceivedMsgBox message={message} key={index} />
+            if (message.from === uid && message.to === title) {
+              return <SentMsgBox message={message} key={index} />
+            } else if (message.from === title && message.to === uid) {
+              return <ReceivedMsgBox message={message} key={index} />
+            }
           })
         }
       </div>

@@ -20,6 +20,25 @@ export default function () {
   return (
     <div>
 
+      {/*<div className={'bg-red-100'}>*/}
+      {/*  <div className={'tabs relative'}>*/}
+      {/*    <div className={'tab-pane flex space-x-4'}>*/}
+      {/*      <div>label</div>*/}
+      {/*      <div className={'hidden absolute top-0 left-10'}>content 1</div>*/}
+      {/*    </div>*/}
+
+      {/*    <div className={'tab-pane flex space-x-4'}>*/}
+      {/*      <div>label</div>*/}
+      {/*      <div className={'hidden absolute top-0 left-10'}>content 2</div>*/}
+      {/*    </div>*/}
+
+      {/*    <div className={'tab-pane flex space-x-4'}>*/}
+      {/*      <div>label</div>*/}
+      {/*      <div className={' absolute top-0 left-10'}>content 3</div>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
+
       <div className={'bg-blue-100'}>
         <Tabs name={'contactTab'} defaultIndex={1} >
           <TabPane name={'tab'} label={'tab1'} index={1}>1111</TabPane>
@@ -47,7 +66,7 @@ function Tabs(props) {
   }, [])
 
   return (
-    <div className={[name, ''].join(' ')}>
+    <div className={[name, 'relative'].join(' ')}>
       <tabContext.Provider value={{activeIndex, setActiveIndex}}>
         <div>{ props.children }</div>
       </tabContext.Provider>
@@ -74,13 +93,13 @@ function TabPane(props) {
 
   return (
     <div className={[name, ''].join(' ')}>
-      <div className={'cursor-default flex'} onClick={() => tabClick(index)} >
+      <div className={'cursor-default'} onClick={() => tabClick(index)} >
 
-        <div className={'bg-gray-100 p-2 hover:bg-gray-200 pr-4'}>
+        <div className={'bg-gray-100 p-2 hover:bg-gray-200'}>
           {label}
         </div>
 
-        <div className={[currentIndex === activeIndex ? '' : 'hidden', 'h-full w-full bg-yellow-100 fixed top-0 left-0 ml-12'].join(' ')}>
+        <div className={[currentIndex === activeIndex ? '' : 'hidden', 'h-full w-full bg-yellow-100 absolute top-0 left-20'].join(' ')}>
           {props.children}
         </div>
 
@@ -88,4 +107,9 @@ function TabPane(props) {
 
     </div>
   )
+}
+
+export {
+  Tabs,
+  TabPane,
 }

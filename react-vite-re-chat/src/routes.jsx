@@ -7,9 +7,7 @@ const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={'/'} element={<App />} >
-          <Route path={'/chat/:uid'} element={<ChatCard />} />
-        </Route>
+        <Route path={'/'} element={<App />} />
         <Route path={'/login'} element={<Login />} />
         <Route path={'/test'} element={<Test />} />
         <Route path="/*" element={<Navigate to="/" />}/>

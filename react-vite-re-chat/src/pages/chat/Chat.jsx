@@ -12,9 +12,8 @@ import {Context} from "../../layout/handler/WSHandler";
 
 import {useContext, useEffect, useState} from "react";
 import {useSelector} from "react-redux";
-import {Outlet, useNavigate} from 'react-router-dom'
 
-export default function Chat(props) {
+export default function Chat() {
 
   // console.log('load Chat page')
 
@@ -24,9 +23,6 @@ export default function Chat(props) {
   /* ================================================= context =========================================================*/
   const { webSocket, message } = useContext(Context);
 
-  /* ================================================= router =========================================================*/
-  const navigate = useNavigate()
-
   /* ================================================= state =========================================================*/
   const [to, setTo] = useState(null)
   const [contacts, setContacts] = useState([])
@@ -34,14 +30,22 @@ export default function Chat(props) {
 
   /* ================================================= useEffect =========================================================*/
   useEffect(() => {
+
     // console.log(uid)
+
+    // load messages from local
+    const localMsg = localStorage.getItem(uid)
+    if (localMsg) {
+      setMessages([
+        ...messages,
+        ...JSON.parse(localMsg)
+      ])
+    }
 
     // 获取好友列表
     fetchContacts(uid)
 
   }, [])
-
-  // useLayoutEffect()
 
   useEffect(() => {
     if (message) {
@@ -57,6 +61,11 @@ export default function Chat(props) {
 
     }
   }, [message])
+
+  useEffect(() => {
+    // save message to local
+    localStorage.setItem(uid, JSON.stringify(messages))
+  }, [messages])
 
   /* ================================================= function callback =========================================================*/
   const sendClickCb = (value) => {
@@ -86,14 +95,15 @@ export default function Chat(props) {
   }
 
   const functionClickCb = () => {
-    // only refresh now
+    // only for refresh now
     console.log('refresh')
+
+    // 获取好友列表
+    fetchContacts(uid)
   }
 
   const contactListClickCb = (toId) => {
     setTo(toId)
-
-    navigate('/chat/' + toId)
   }
 
   /* ================================================= function fetch =========================================================*/
@@ -107,7 +117,6 @@ export default function Chat(props) {
     })
 
     setContacts([
-      ...contacts,
       ...list
     ])
 
@@ -130,14 +139,12 @@ export default function Chat(props) {
             </div>
 
             <div className={'col-span-9 p-2 mt-2 bg-white w-full h-auto'}>
-              <Outlet>
-                {/*{*/}
-                {/*  to ? <ChatCard uid={uid} title={to} sendClickCb={sendClickCb} messages={messages} /> :*/}
-                {/*    <div className={'bg-white shadow-lg w-full h-full flex justify-center items-center text-gray-700'}>*/}
-                {/*      Pick one and chat*/}
-                {/*    </div>*/}
-                {/*}*/}
-              </Outlet>
+              {
+                to ? <ChatCard uid={uid} title={to} sendClickCb={sendClickCb} messages={messages} /> :
+                  <div className={'bg-white shadow-lg w-full h-full flex justify-center items-center text-gray-700'}>
+                    Pick one and chat
+                  </div>
+              }
             </div>
           </div>
 

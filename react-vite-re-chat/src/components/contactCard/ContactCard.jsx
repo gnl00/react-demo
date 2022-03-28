@@ -1,4 +1,5 @@
 import './ContactCard.css'
+import {TabPane, Tabs} from "../contactTab/ContactTab";
 
 export default function ContactCard(props) {
 
@@ -16,13 +17,11 @@ export default function ContactCard(props) {
         <div className={'mr-5 p-2 rounded  text-gray-400 bg-gray-100 shadow-lg shadow-inner transition duration-500 ease-in-out transform hover:scale-110'} onClick={functionClick}>Refresh</div>
       </div>
       <div className={'p-2 bg-white'}>
-
         {
           contacts.map((contact, index) => {
             return <ContactList contactListClickCb={contactListClickCb} key={index} contact={contact} />
           })
         }
-
       </div>
     </div>
   )
