@@ -12,6 +12,8 @@ import {Context} from "../../layout/handler/WSHandler";
 
 import {useContext, useEffect, useState} from "react";
 import {useSelector} from "react-redux";
+import {toDateTime} from "../../util/dateFormatUtils";
+import {latestMessageSuf, messagesStoreSuf, Prefix} from "../../const/Const";
 
 export default function Chat() {
 
@@ -26,9 +28,10 @@ export default function Chat() {
   /* ================================================= state =========================================================*/
   const [to, setTo] = useState(null)
   const [contacts, setContacts] = useState([])
-  const [messages, setMessages] = useState([])
+  const [messagesObj, setMessagesObj] = useState(null)
   const [showChatInterface, setShowChatInterface] = useState(false)
 
+  const [latestMessage, setLatestMessage] = useState()
   const [unreadMessages, setUnReadMessages] = useState()
 
   /* ================================================= useEffect =========================================================*/
@@ -37,12 +40,20 @@ export default function Chat() {
     // console.log(uid)
 
     // load messages from local
-    const localMsg = localStorage.getItem(uid)
-    if (localMsg) {
-      setMessages([
-        ...messages,
-        ...JSON.parse(localMsg)
-      ])
+    const localMessagesObj = localStorage.getItem(Prefix + uid + messagesStoreSuf)
+
+    setMessagesObj({
+      ...JSON.parse(localMessagesObj)
+    })
+
+    // load latest messages from local
+    const localLatest = localStorage.getItem(Prefix + uid + latestMessageSuf)
+    if (localLatest) {
+      // console.log(JSON.parse(localLatest))
+      setLatestMessage(prevState => {
+        const nextState = JSON.parse(localLatest)
+        return nextState
+      })
     }
 
     // 获取好友列表
@@ -51,18 +62,20 @@ export default function Chat() {
   }, [])
 
   useEffect(() => {
+
+    // 接收到消息
     if (message) {
       const msgObj = JSON.parse(message)
+
       // console.log(msgObj)
-
-      setMessages([
-        ...messages,
-        msgObj
-      ])
-
       // setTo(msgObj.from)
 
-      // 接收到消息
+      // setMessages([
+      //   ...messages,
+      //   msgObj
+      // ])
+
+      // 设置未读消息
       // 当前聊天窗口对象和消息发送对象不一致才存入未读消息
       if (to != msgObj.from) {
         setUnReadMessages(prevState => {
@@ -98,23 +111,32 @@ export default function Chat() {
             }
           }
 
-          // console.log(nextState)
-
           return nextState
         })
       }
 
+      // 设置最近内容
+      updateLatestMessage({key: msgObj.from, body: msgObj.body, date: msgObj.date})
+
+      // update local while receive message
+      updateMessageRecord({key: msgObj.from, msgObj})
+
     }
+
   }, [message])
 
+  // save messages to local v1.0
+  // useEffect(() => {
+  //   localStorage.setItem(uid, JSON.stringify(messages))
+  // }, [messages])
+
+  // save messages to local v2.0
   useEffect(() => {
+    // console.log(messagesObj)
 
-    // remove local messages
-    localStorage.removeItem(uid)
-
-    // save message to local
-    localStorage.setItem(uid, JSON.stringify(messages))
-  }, [messages])
+    // save messages record to local
+    localStorage.setItem(Prefix + uid + messagesStoreSuf, JSON.stringify(messagesObj))
+  }, [messagesObj])
 
   /* ================================================= function callback =========================================================*/
   const sendClickCb = (value) => {
@@ -126,26 +148,90 @@ export default function Chat() {
       return
     }
 
+    const msgDate = new Date().getTime()
     const objMsg = buildMessage({
       from: uid,
       to,
       body: value,
       type: 'string',
-      date: new Date().getTime()
+      date: msgDate
     })
 
-    setMessages([
-      ...messages,
-      objMsg
-    ])
+    // setMessages([
+    //   ...messages,
+    //   objMsg
+    // ])
 
     const jsonMsg = JSON.stringify(objMsg)
     webSocket.send(jsonMsg)
+
+    // 更新最近内容
+    updateLatestMessage({key: to, body: value, date: msgDate})
+
+    // update local while send message
+    updateMessageRecord({key: to, msgObj: objMsg})
+  }
+
+  const updateMessageRecord = ({key, msgObj}) => {
+
+    setMessagesObj(prevState => {
+
+      let nextState = null
+
+      if (prevState && Object.keys(prevState).indexOf(key) != -1) {
+        // 已记录过
+        const messageList = Object.assign([], prevState[key])
+        messageList.push(msgObj)
+
+        nextState = {
+          ...prevState,
+          [key]: messageList
+        }
+
+      } else {
+        // 未记录过
+        const saveObj = {
+          [key]: [msgObj]
+        }
+
+        nextState = {
+          ...prevState,
+          ...saveObj
+        }
+      }
+
+      return nextState
+    })
+
+  }
+
+  const updateLatestMessage = ({key, body, date}) => {
+    setLatestMessage(prevState => {
+
+      const time = toDateTime(date)
+
+      let timeObj = {
+        [key]: {
+          time,
+          text: body
+        }
+      }
+
+      const nextState = {
+        ...prevState,
+        ...timeObj
+      }
+
+      localStorage.setItem(Prefix + uid + latestMessageSuf, JSON.stringify(nextState))
+
+      return nextState
+
+    })
   }
 
   const functionClickCb = () => {
     // only for refresh now
-    console.log('refresh')
+    // console.log('refresh')
 
     // 获取好友列表
     fetchContacts(uid)
@@ -198,13 +284,13 @@ export default function Chat() {
 
           <div className={'grid grid-cols-12 w-full h-full'}>
             <div className={'col-span-3 w-full h-full mt-2'}>
-              <ContactCard contacts={contacts} unreadMessages={unreadMessages} functionClickCb={functionClickCb} contactListClickCb={contactListClickCb} />
+              <ContactCard contacts={contacts} unreadMessages={unreadMessages} latestMessage={latestMessage} functionClickCb={functionClickCb} contactListClickCb={contactListClickCb} />
             </div>
 
             <div className={'col-span-9 p-2 mt-2 bg-white w-full h-auto'}>
               {
                 showChatInterface ?
-                  <ChatCard uid={uid} title={to} sendClickCb={sendClickCb} messages={messages} setShowChatInterface={setShowChatInterface}  /> :
+                  <ChatCard uid={uid} title={to} setTo={setTo} sendClickCb={sendClickCb} messagesObj={messagesObj} setShowChatInterface={setShowChatInterface}  /> :
                   <div className={['bg-white shadow-lg w-full h-full flex justify-center items-center text-gray-700', !showChatInterface ? '' : 'hidden'].join(' ')}>
                     Pick one and chat
                   </div>

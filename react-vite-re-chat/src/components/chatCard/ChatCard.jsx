@@ -8,7 +8,7 @@ import {Picker} from "emoji-mart";
 
 export default function ChatCard(props) {
 
-  const { uid, title, sendClickCb, messages = [], setShowChatInterface } = props
+  const { uid, title: to, setTo, sendClickCb, messagesObj, setShowChatInterface } = props
 
   // 记录最后一条消息
   const messageEnd = useRef(null)
@@ -18,26 +18,16 @@ export default function ChatCard(props) {
 
   // https://blog.csdn.net/culiu9261/article/details/107543860
   useEffect(() => {
-    // console.log(messageEnd)
-    if (messages && messages.length != 0) {
-
-      const chatBoxDom = document.getElementById('chatBox')
-      // const finalMsgBoxDom = document.getElementById('finalMsgBox')
-
-      if (messageEnd) {
-        chatBoxDom.scrollIntoView(messageEnd)
-      }
-
-      // chatBoxDom.scrollIntoView(true)
-      // console.log(chatBoxDom.offsetTop)
-      // console.log(chatBoxDom.offsetHeight)
-      // chatBoxDom.scrollTo(0, chatBoxDom.offsetHeight)
-
+    // console.log(messageEnd.current)
+    if (messagesObj) {
+      scrollToBottom()
     }
-  }, [messages])
+  }, [messagesObj])
 
   const scrollToBottom = () => {
-    console.log(messageEnd)
+    if (messageEnd && messageEnd.current) {
+      messageEnd.current.scrollIntoView()
+    }
   }
 
   const onEmojiSelected = (emoji) => {
@@ -52,20 +42,15 @@ export default function ChatCard(props) {
   return (
     <div className={'shadow-lg w-full h-full rounded text-gray-800 flex flex-col justify-between'}>
 
-      <ChatTitle title={title} setShowChatInterface={setShowChatInterface} />
+      <ChatTitle title={to} setTo={setTo} setShowChatInterface={setShowChatInterface} />
 
-      <div id={'chatBox'} className={'w-full h-96 max-h-96 p-2 overflow-auto'}>
+      <div className={'w-full h-96 max-h-96 p-2 overflow-auto'}>
         {
-          messages.map((message, index) => {
-            // 将消息状态设置为已读
-            message.read = true
-
-            if (message.from === uid && message.to === title) {
-              return <SentMsgBox message={message} key={index} ref={(index + 1) === messages.length ? messageEnd : null} />
-            } else if (message.from === title && message.to === uid) {
-              return <ReceivedMsgBox message={message} key={index} ref={(index + 1) === messages.length ? messageEnd : null} />
-            }
-          })
+          messagesObj && messagesObj[to] ? messagesObj[to].map((message, index) => {
+            return message.from === uid ?
+              <SentMsgBox message={message} key={index} ref={(index + 1) === messagesObj[to].length ? messageEnd : null} /> :
+              <ReceivedMsgBox message={message} key={index} ref={(index + 1) === messagesObj[to].length ? messageEnd : null} />
+          }) : <></>
         }
       </div>
 
@@ -87,10 +72,11 @@ export default function ChatCard(props) {
 
 function ChatTitle(props) {
 
-  const { title, setShowChatInterface } = props
+  const { title, setTo, setShowChatInterface } = props
 
   const closeHandler = () => {
     setShowChatInterface(false)
+    setTo(null)
   }
 
   return (
@@ -175,7 +161,7 @@ function EditArea(props) {
 
   const sendClick = () => {
 
-    if (inputVal.trim().length != 0) {
+    if (inputVal && inputVal.trim().length != 0) {
       sendClickCb(inputVal)
 
       setInputVal(null)

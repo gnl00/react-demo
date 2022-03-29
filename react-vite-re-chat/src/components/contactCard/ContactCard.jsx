@@ -1,11 +1,10 @@
 import './ContactCard.css'
-import {TabPane, Tabs} from "../contactTab/ContactTab";
 
 export default function ContactCard(props) {
 
-  const { contacts, unreadMessages, functionClickCb, contactListClickCb } = props
+  const { contacts, unreadMessages, latestMessage, functionClickCb, contactListClickCb } = props
 
-  const functionClick = (evt) => {
+  const functionClick = () => {
     // console.log('use for add friends or groups')
     functionClickCb()
   }
@@ -19,7 +18,7 @@ export default function ContactCard(props) {
       <div className={'p-2 bg-white'}>
         {
           contacts.map((contact, index) => {
-            return <ContactList key={index} contactListClickCb={contactListClickCb} contact={contact} unreadMessages={unreadMessages}  />
+            return <ContactList key={index} contactListClickCb={contactListClickCb} contact={contact} unreadMessages={unreadMessages} latestMessage={latestMessage}  />
           })
         }
       </div>
@@ -29,7 +28,7 @@ export default function ContactCard(props) {
 
 function ContactList(props) {
 
-  const {contact, contactListClickCb, unreadMessages} = props
+  const { contact, contactListClickCb, unreadMessages ,latestMessage } = props
 
   const onItemClick = () => {
     contactListClickCb(contact.uid)
@@ -41,13 +40,15 @@ function ContactList(props) {
         <div className={'bg-white shadow mr-2 rounded p-2 w-20 max-w-20 h-16 max-h-16 flex justify-center items-center'}>{contact.uid}</div>
         <div className={'flex flex-col justify-around items-start space-y-2 w-full h-full truncate'}>
           <p className={'rounded p-1 text-black'}>{contact.uid}</p>
-          <p className={'rounded max-w-sm truncate pl-1 text-gray-600'}>text text text text text text text text text text text text text text text text</p>
+
+          <p className={'rounded max-w-sm truncate pl-1 text-gray-600'}>{ latestMessage && latestMessage[contact.uid] ? latestMessage[contact.uid].text : ''}</p>
+
         </div>
-        <div className={'ml-2 flex flex-col justify-around items-center space-y-2'}>
+        <div className={'ml-2 h-full flex flex-col justify-around items-center space-y-2'}>
           {
             unreadMessages && unreadMessages[contact.uid] ? <div className={'rounded-full p-1 text-blue-400 bg-white ring-2 text-xs'}>{unreadMessages[contact.uid].count}</div>  : <></>
           }
-          <div className={'text-gray-500 text-sm'}>18:30</div>
+          <div className={'text-gray-500 text-sm'}>{ latestMessage && latestMessage[contact.uid] ? latestMessage[contact.uid].time : ''}</div>
         </div>
       </div>
     </div>
