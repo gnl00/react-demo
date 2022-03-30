@@ -1,4 +1,6 @@
-export const Prefix = 're-chat-'
+export const Prefix = 'reChat-'
 
-export const messagesStoreSuf = '-msg-store'
-export const latestMessageSuf = '-msg-latest'
+export const messagesStoreSuf = '-msgStore'
+export const latestMessageSuf = '-msgLatest'
+
+export const contactsSuf = '-contacts'

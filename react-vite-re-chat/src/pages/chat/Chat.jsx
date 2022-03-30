@@ -3,7 +3,7 @@ import './Chat.css'
 import NotchCard from "../../components/notchCard/NotchCard";
 import HeaderCard from "../../components/headerCard/HeaderCard";
 import ContactCard from "../../components/contactCard/ContactCard";
-import ChatCard from "../../components/chatCard/ChatCard";
+import ChatCard, { FriendCard, GroupCard } from "../../components/chatCard/ChatCard";
 
 import {buildMessage} from "../../util/messageUtils";
 import {getContactList} from "../../network/request/user";
@@ -13,7 +13,7 @@ import {Context} from "../../layout/handler/WSHandler";
 import {useContext, useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import {toDateTime} from "../../util/dateFormatUtils";
-import {latestMessageSuf, messagesStoreSuf, Prefix} from "../../const/Const";
+import {contactsSuf, latestMessageSuf, messagesStoreSuf, Prefix} from "../../const/Const";
 
 export default function Chat() {
 
@@ -29,15 +29,19 @@ export default function Chat() {
   const [to, setTo] = useState(null)
   const [contacts, setContacts] = useState([])
   const [messagesObj, setMessagesObj] = useState(null)
-  const [showChatInterface, setShowChatInterface] = useState(false)
 
   const [latestMessage, setLatestMessage] = useState()
   const [unreadMessages, setUnReadMessages] = useState()
 
+  const [userList, setUserList] = useState([])
+  const [groupContacts, setGroupContacts] = useState([])
+
+  const [showChatCard, setShowChatCard] = useState(false)
+  const [showFriendCard, setShowFriendCard] = useState(false)
+  const [showGroupCard, setShowGroupCard] = useState(false)
+
   /* ================================================= useEffect =========================================================*/
   useEffect(() => {
-
-    // console.log(uid)
 
     // load messages from local
     const localMessagesObj = localStorage.getItem(Prefix + uid + messagesStoreSuf)
@@ -56,8 +60,14 @@ export default function Chat() {
       })
     }
 
-    // 获取好友列表
-    fetchContacts(uid)
+    // local friends list from local
+    const localContactsStr = localStorage.getItem(Prefix + uid + contactsSuf)
+    if (localContactsStr) {
+      const localContacts = JSON.parse(localContactsStr)
+
+      setContacts(localContacts)
+    }
+
 
   }, [])
 
@@ -66,14 +76,6 @@ export default function Chat() {
     // 接收到消息
     if (message) {
       const msgObj = JSON.parse(message)
-
-      // console.log(msgObj)
-      // setTo(msgObj.from)
-
-      // setMessages([
-      //   ...messages,
-      //   msgObj
-      // ])
 
       // 设置未读消息
       // 当前聊天窗口对象和消息发送对象不一致才存入未读消息
@@ -125,16 +127,9 @@ export default function Chat() {
 
   }, [message])
 
-  // save messages to local v1.0
-  // useEffect(() => {
-  //   localStorage.setItem(uid, JSON.stringify(messages))
-  // }, [messages])
-
-  // save messages to local v2.0
+  // save messages to local
   useEffect(() => {
     // console.log(messagesObj)
-
-    // save messages record to local
     localStorage.setItem(Prefix + uid + messagesStoreSuf, JSON.stringify(messagesObj))
   }, [messagesObj])
 
@@ -229,18 +224,16 @@ export default function Chat() {
     })
   }
 
-  const functionClickCb = () => {
-    // only for refresh now
+  const refreshClickCb = () => {
     // console.log('refresh')
 
-    // 获取好友列表
-    fetchContacts(uid)
+    // TODO 刷新好友列表
   }
 
   const contactListClickCb = (toId) => {
     setTo(toId)
 
-    setShowChatInterface(true)
+    setShowChatCard(true)
 
     setUnReadMessages(prevState => {
 
@@ -255,7 +248,72 @@ export default function Chat() {
     })
   }
 
+  const addFriendShowCb = async () => {
+    setShowChatCard(false)
+    setShowFriendCard(true)
+
+    // fetch friends list
+    const list = await getContactList(uid).then(res => {
+      return res.filter((item) => item.uid != uid).map(item => {
+        return {
+          uid: item.uid
+        }
+      })
+    }).catch(err => {
+      console.log(err)
+    })
+    setUserList(list)
+  }
+
+  const friendCloseCb = () => {
+    setShowFriendCard(false)
+  }
+
+  const addFriendCb = (friendId) => {
+    // console.log('add friend ' + friendId)
+
+    // add friends
+    const friendObj = {
+      uid: friendId
+    }
+
+    const friends = [
+      ...contacts,
+      friendObj
+    ];
+
+    // save friends list to local
+    localStorage.setItem(Prefix + uid + contactsSuf, JSON.stringify(friends))
+
+    setContacts([
+      ...friends
+    ])
+
+  }
+
+  const chatCloseClickCb = () => {
+    setShowChatCard(false)
+  }
+
+  const openGroupCb = () => {
+    setShowFriendCard(false)
+    setShowChatCard(false)
+
+    setShowGroupCard(true)
+  }
+
+  const groupCardCloseCb = () => {
+    setShowGroupCard(false)
+  }
+
+  const addGroupMemberCb = () => {
+    setGroupContacts([
+      ...contacts
+    ])
+  }
+
   /* ================================================= function fetch =========================================================*/
+  // Deprecated
   // fetch and set contacts
   const fetchContacts = async (uid) => {
 
@@ -277,23 +335,24 @@ export default function Chat() {
 
       <NotchCard />
 
-      <div className={'p-10 rounded'}>
+      <div className={'p-8 rounded'}>
         <div className={'bg-white w-full h-full shadow rounded'}>
 
-          <HeaderCard uid={uid} />
+          <div className={'grid grid-cols-12 w-full h-full p-1'}>
 
-          <div className={'grid grid-cols-12 w-full h-full'}>
-            <div className={'col-span-3 w-full h-full mt-2'}>
-              <ContactCard contacts={contacts} unreadMessages={unreadMessages} latestMessage={latestMessage} functionClickCb={functionClickCb} contactListClickCb={contactListClickCb} />
+            <div className={'col-span-3 w-full h-full p-1 space-y-4'}>
+              <HeaderCard uid={uid} />
+              <ContactCard contacts={contacts} unreadMessages={unreadMessages} latestMessage={latestMessage} refreshClickCb={refreshClickCb} addFriendShowCb={addFriendShowCb} openGroupCb={openGroupCb} contactListClickCb={contactListClickCb} />
             </div>
 
-            <div className={'col-span-9 p-2 mt-2 bg-white w-full h-auto'}>
+            <div className={'col-span-9 p-2 w-full h-auto'}>
               {
-                showChatInterface ?
-                  <ChatCard uid={uid} title={to} setTo={setTo} sendClickCb={sendClickCb} messagesObj={messagesObj} setShowChatInterface={setShowChatInterface}  /> :
-                  <div className={['bg-white shadow-lg w-full h-full flex justify-center items-center text-gray-700', !showChatInterface ? '' : 'hidden'].join(' ')}>
-                    Pick one and chat
-                  </div>
+                showChatCard ? <ChatCard uid={uid} title={to} setTo={setTo} sendClickCb={sendClickCb} messagesObj={messagesObj} closeClickCb={chatCloseClickCb}  /> :
+                  showFriendCard ? <FriendCard closeClickCb={friendCloseCb} addFriendCb={addFriendCb} userList={userList} /> :
+                    showGroupCard ? <GroupCard groupCardCloseCb={groupCardCloseCb} addGroupMemberCb={addGroupMemberCb} groupContacts={groupContacts} /> :
+                    <div className={['bg-white shadow-lg w-full h-full flex justify-center items-center text-gray-700 rounded', !showChatCard || !showFriendCard || !showGroupCard ? '' : 'hidden'].join(' ')}>
+                      Pick one and chat
+                    </div>
               }
             </div>
           </div>

@@ -9,19 +9,17 @@ export default function HeaderCard(props) {
   }
 
   return (
-    <div className={'h-full flex justify-between rounded shadow-lg'}>
-      <div className={'flex'}>
-        <div className={'bg-gray-100 m-2 ml-5 p-2 h-24 w-24 rounded-lg flex justify-center items-center cursor-default shadow'}>{uid}</div>
+    <div className={'h-auto w-auto p-2 flex justify-between items-start rounded shadow'}>
+      <div className={'flex space-x-2'}>
+        <div className={'h-20 w-20 bg-gray-100 flex justify-center items-center rounded-lg shadow cursor-default'}>{'Avatar'}</div>
 
         <div className={'rounded h-auto flex flex-col justify-around items-start'}>
-          <div className={'m-1 p-2 text-gray-700 text-xl shadow shadow-inner rounded-md'}>{uid}</div>
-          <div className={'m-1 p-2 text-gray-600 shadow shadow-inner rounded-md'}>motto motto motto motto</div>
+          <div className={'p-1 text-gray-700 text-xl shadow shadow-inner rounded-md'}>{uid}</div>
+          <div className={'p-1 text-gray-600 shadow shadow-inner rounded-md'}>motto motto motto motto</div>
         </div>
       </div>
 
-      <div className={'w-auto h-full mt-4 mr-5'}>
-        <div className={'p-2 pr-4 pl-4 rounded shadow-lg shadow-inner bg-gray-100 text-gray-400 transition ease-in-out duration-500 transform hover:scale-110 cursor-default'} onClick={btnClick}>Menu</div>
-      </div>
+      <div className={'w-auto h-full p-2 bg-gray-100 text-gray-400 rounded-lg shadow-lg shadow-inner transition ease-in-out duration-500 transform hover:scale-110 cursor-default'} onClick={btnClick}>Menu</div>
 
     </div>
   )
