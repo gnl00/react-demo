@@ -19,7 +19,7 @@ export default function HeaderCard(props) {
         </div>
       </div>
 
-      <div className={'w-auto h-full p-2 bg-gray-100 text-gray-400 rounded-lg shadow-lg shadow-inner transition ease-in-out duration-500 transform hover:scale-110 cursor-default'} onClick={btnClick}>Menu</div>
+      <div className={'w-auto h-full p-2 bg-gray-100 text-gray-400 rounded-lg shadow shadow-inner transition ease-in-out duration-500 transform hover:scale-110 cursor-default'} onClick={btnClick}>Menu</div>
 
     </div>
   )

@@ -255,6 +255,7 @@ export function GroupCard(props) {
 
   const { groupCardCloseCb, sendClickCb, groupContacts = [], addGroupMemberCb } = props
 
+  const [groupMembers, setGroupMember] = useState([])
   const [showGroupMember, setShowGroupMember] = useState(false)
   const [showAddToGroupLayout, setShowAddToGroupLayout] = useState(false)
 
@@ -269,14 +270,13 @@ export function GroupCard(props) {
   }
 
   const addMemberClick = () => {
-    // TODO callback fetch friends list
     // console.log('addMemberClick')
     setShowAddToGroupLayout(true)
     addGroupMemberCb()
   }
 
   const addToGroup = (memberId) => {
-    console.log('add group member')
+    console.log('add group member ', memberId)
 
     // TODO add friend to group
 
@@ -318,7 +318,7 @@ export function GroupCard(props) {
       {
         showAddToGroupLayout ?
           <div className={'z-10 w-full h-full p-2 shadow-lg flex flex-col justify-center items-center space-y-2'}>
-            <div className={'w-1/3 flex justify-center items-center bg-gray-100 rounded p-1 shadow-inner'}  onClick={addToGroupCloseClick}>
+            <div className={'w-1/3 flex justify-center items-center ring ring-red-100 text-red-400 rounded p-1 shadow-inner'}  onClick={addToGroupCloseClick}>
               Close
             </div>
             <div className={'w-full flex justify-center flex-wrap'}>

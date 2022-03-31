@@ -13,7 +13,7 @@ import {Context} from "../../layout/handler/WSHandler";
 import {useContext, useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import {toDateTime} from "../../util/dateFormatUtils";
-import {contactsSuf, latestMessageSuf, messagesStoreSuf, Prefix} from "../../const/Const";
+import {contactsSuf, latestMessageSuf, messagesStoreSuf, Prefix, unReadMessageSuf} from "../../const/Const";
 
 export default function Chat() {
 
@@ -68,6 +68,13 @@ export default function Chat() {
       setContacts(localContacts)
     }
 
+    // get unread messages from local
+    const localUnreadStr = localStorage.getItem(Prefix + uid + unReadMessageSuf)
+    if (localUnreadStr) {
+      const localUnread = JSON.parse(localUnreadStr)
+
+      setUnReadMessages(localUnread)
+    }
 
   }, [])
 
@@ -80,6 +87,25 @@ export default function Chat() {
       // 设置未读消息
       // 当前聊天窗口对象和消息发送对象不一致才存入未读消息
       if (to != msgObj.from) {
+
+        // 将 msgObj.from 加入 contacts
+        setContacts(prevState => {
+          let nextState = prevState
+
+          // 如果 contacts 中无当前联系人，添加
+          if (!prevState || !prevState.find(item => item.uid === msgObj.from)) {
+            nextState = [
+              ...prevState,
+              {
+                uid: msgObj.from
+              }
+            ]
+            // save contacts to local
+            localStorage.setItem(Prefix + uid + contactsSuf, JSON.stringify(nextState))
+          }
+          return nextState
+        })
+
         setUnReadMessages(prevState => {
 
           let key = msgObj.from
@@ -112,6 +138,9 @@ export default function Chat() {
               ...obj
             }
           }
+
+          // save unread to local
+          localStorage.setItem(Prefix + uid + unReadMessageSuf, JSON.stringify(nextState))
 
           return nextState
         })
@@ -237,7 +266,7 @@ export default function Chat() {
 
     setUnReadMessages(prevState => {
 
-      let nextState = null
+      let nextState = prevState
 
       // 存在未读消息
       if (prevState && Object.keys(prevState).indexOf(toId) != -1) {
@@ -245,6 +274,11 @@ export default function Chat() {
         nextState = Object.assign({}, prevState)
         nextState[toId] = null
       }
+
+      // update unread message to local
+      localStorage.setItem(Prefix + uid + unReadMessageSuf, JSON.stringify(nextState))
+
+      return nextState
     })
   }
 
@@ -315,19 +349,19 @@ export default function Chat() {
   /* ================================================= function fetch =========================================================*/
   // Deprecated
   // fetch and set contacts
-  const fetchContacts = async (uid) => {
-
-    const list = await getContactList(uid).then(res => {
-      return res.filter((item) => item.uid != uid)
-    }).catch(err => {
-      console.log(err)
-    })
-
-    setContacts([
-      ...list
-    ])
-
-  }
+  // const fetchContacts = async (uid) => {
+  //
+  //   const list = await getContactList(uid).then(res => {
+  //     return res.filter((item) => item.uid != uid)
+  //   }).catch(err => {
+  //     console.log(err)
+  //   })
+  //
+  //   setContacts([
+  //     ...list
+  //   ])
+  //
+  // }
 
   /* ================================================= render =========================================================*/
   return (
