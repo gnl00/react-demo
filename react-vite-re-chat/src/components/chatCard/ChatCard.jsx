@@ -253,11 +253,14 @@ export function FriendCard(props) {
 
 export function GroupCard(props) {
 
-  const { groupCardCloseCb, sendClickCb, groupContacts = [], addGroupMemberCb } = props
+  const { curGroup, groupCardCloseCb, sendClickCb, contacts = [], groupMember, addGroupMemberCb } = props
 
-  const [groupMembers, setGroupMember] = useState([])
-  const [showGroupMember, setShowGroupMember] = useState(false)
+  const [members, setMembers] = useState([])
   const [showAddToGroupLayout, setShowAddToGroupLayout] = useState(false)
+
+  useEffect(() => {
+    setMembers(groupMember)
+  }, [groupMember])
 
   const handleCloseClick = () => {
     groupCardCloseCb()
@@ -265,20 +268,20 @@ export function GroupCard(props) {
 
   const groupMemberClick = () => {
     console.log('groupMemberClick')
-
     // TODO show group friends
   }
 
   const addMemberClick = () => {
     // console.log('addMemberClick')
     setShowAddToGroupLayout(true)
-    addGroupMemberCb()
+
   }
 
   const addToGroup = (memberId) => {
-    console.log('add group member ', memberId)
+    // console.log('add group member ', memberId)
 
     // TODO add friend to group
+    addGroupMemberCb(memberId)
 
   }
 
@@ -291,7 +294,7 @@ export function GroupCard(props) {
       <div className={'flex-1 bg-gray-100 w-full flex justify-between items-center p-2'}>
 
         <div className={'flex justify-center items-center p-1 space-x-2'}>
-          <div>Group Member()</div>
+          <div className={'max-w-80 truncate'}>{curGroup}({ members && members[curGroup] ? members[curGroup].join('、') : ''})</div>
           <div>
             <div className={'rounded-lg shadow p-2 bg-white text-gray-400 transition ease-in-out duration-500 transform hover:scale-110'} onClick={groupMemberClick}>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -323,7 +326,7 @@ export function GroupCard(props) {
             </div>
             <div className={'w-full flex justify-center flex-wrap'}>
               {
-                groupContacts.map((item, index) => {
+                contacts.map((item, index) => {
                   return (
                     <div key={index} className={'bg-gray-100 p-2 w-1/3 rounded m-1 shadow flex justify-between items-center transition ease-in-out duration-500 transform hover:scale-105'}>
                       <div>{item.uid}</div>

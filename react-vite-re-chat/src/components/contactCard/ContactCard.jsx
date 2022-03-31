@@ -3,7 +3,7 @@ import {useState} from "react";
 
 export default function ContactCard(props) {
 
-  const { contacts, unreadMessages, latestMessage, refreshClickCb, addFriendShowCb, openGroupCb, contactListClickCb } = props
+  const { contacts, groups, unreadMessages, latestMessage, refreshClickCb, addFriendShowCb, createGroupCb, groupCardOpenCb, contactListClickCb } = props
 
   const [showFunctions, setShowFunctions] = useState(false);
 
@@ -27,7 +27,7 @@ export default function ContactCard(props) {
   const openGroupClick = () => {
     setShowFunctions(false)
 
-    openGroupCb()
+    createGroupCb()
   }
 
   return (
@@ -66,7 +66,7 @@ export default function ContactCard(props) {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
-          <span>Open Group</span>
+          <span>Create Group</span>
         </div>
       </div>
 
@@ -75,6 +75,14 @@ export default function ContactCard(props) {
         {
           contacts.map((contact, index) => {
             return <ContactList key={index} contactListClickCb={contactListClickCb} contact={contact} unreadMessages={unreadMessages} latestMessage={latestMessage}  />
+          })
+        }
+
+        {
+          groups.map((group, index) => {
+            return (
+              <GroupList key={index} group={group} groupCardOpenCb={groupCardOpenCb} />
+            )
           })
         }
       </div>
@@ -106,6 +114,35 @@ function ContactList(props) {
             unreadMessages && unreadMessages[contact.uid] ? <div className={'rounded-full p-1 text-blue-400 bg-white ring-2 text-xs'}>{unreadMessages[contact.uid].count}</div>  : <></>
           }
           <div className={'text-gray-500 text-sm'}>{ latestMessage && latestMessage[contact.uid] ? latestMessage[contact.uid].time : ''}</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function GroupList(props) {
+
+  const { group, groupCardOpenCb, latestMessage, unreadMessages } = props
+
+  const clickHandle = () => {
+    groupCardOpenCb(group.gid)
+  }
+
+  return (
+    <div className={'contact-list bg-white shadow-lg p-2 rounded m-1'} onClick={clickHandle}>
+      <div className={'flex h-16'}>
+        <div className={'bg-gray-100 shadow mr-2 rounded p-2 w-20 max-w-20 h-16 max-h-16 flex justify-center items-center'}>{group.gid}</div>
+        <div className={'flex flex-col justify-around items-start space-y-2 w-full h-full truncate'}>
+          <p className={'rounded p-1 text-black'}>{group.gid}</p>
+
+          <p className={'rounded max-w-sm truncate pl-1 text-gray-600'}>{ latestMessage && latestMessage[group.gid] ? latestMessage[group.gid].text : ''}</p>
+
+        </div>
+        <div className={'ml-2 h-full flex flex-col justify-around items-center space-y-2'}>
+          {
+            unreadMessages && unreadMessages[group.gid] ? <div className={'rounded-full p-1 text-blue-400 bg-white ring-2 text-xs'}>{unreadMessages[group.gid].count}</div>  : <></>
+          }
+          <div className={'text-gray-500 text-sm'}>{ latestMessage && latestMessage[group.gid] ? latestMessage[group.gid].time : ''}</div>
         </div>
       </div>
     </div>

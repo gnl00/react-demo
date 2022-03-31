@@ -14,3 +14,19 @@ export const getContactList = (params) => {
     url: '/user/contacts'
   })
 }
+
+export const createGroup = (data) => {
+  return instance({
+    method: 'post',
+    url: '/user/group',
+    data
+  })
+}
+
+export const updateGroup = (data) => {
+  return instance({
+    method: 'put',
+    url: '/user/group',
+    data
+  })
+}

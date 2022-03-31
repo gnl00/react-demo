@@ -108,6 +108,8 @@ export default function Chat() {
 <br>
 <br> 3、组件列表被点击时
 <br> 3.1、点击列表 item 时， 如果存在未读消息此时置空；
+<br>
+<br> 4、好友聊天 list 和群组聊天 list 的处理
 
 ### 聊天框组件
 
