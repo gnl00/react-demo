@@ -400,17 +400,22 @@ export default function Chat() {
 
         let nextState = prevState
 
-        let msgObj = {
-          [curGroup]: [messageObj]
+        // 记录是否已存在
+        if (nextState && nextState[curGroup]) {
+          let messages = nextState[curGroup]
+          messages.push(messageObj)
+        } else {
+          let msgObj = {
+            [curGroup]: [messageObj]
+          }
+
+          nextState = {
+            ...prevState,
+            ...msgObj
+          }
         }
 
-        nextState = {
-          ...prevState,
-        }
-
-        console.log(nextState)
-
-        return prevState
+        return nextState
       })
 
       // update recent message
@@ -533,8 +538,8 @@ export default function Chat() {
               {
                 showChatCard ? <ChatCard uid={uid} title={to} setTo={setTo} sendClickCb={sendClickCb} messagesObj={messagesObj} closeClickCb={chatCloseClickCb}  /> :
                   showFriendCard ? <FriendCard closeClickCb={friendCloseCb} addFriendCb={addFriendCb} userList={userList} /> :
-                    showGroupCard ? <GroupCard curGroup={curGroup} groupMember={groupMember} groupCardCloseCb={groupCardCloseCb} addGroupMemberCb={addGroupMemberCb}
-                                               contacts={contacts} sendClickCb={groupSendClickCb} /> :
+                    showGroupCard ? <GroupCard uid={uid} curGroup={curGroup} groupMember={groupMember} groupCardCloseCb={groupCardCloseCb} addGroupMemberCb={addGroupMemberCb}
+                                               contacts={contacts} sendClickCb={groupSendClickCb} groupMessages={groupMessage} /> :
                     <div className={['bg-white shadow-lg w-full h-full flex justify-center items-center text-gray-700 rounded', !showChatCard || !showFriendCard || !showGroupCard ? '' : 'hidden'].join(' ')}>
                       Pick one and chat
                     </div>

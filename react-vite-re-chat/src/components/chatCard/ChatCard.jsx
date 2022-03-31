@@ -253,10 +253,20 @@ export function FriendCard(props) {
 
 export function GroupCard(props) {
 
-  const { curGroup, groupCardCloseCb, sendClickCb, contacts = [], groupMember, addGroupMemberCb } = props
+  const { uid, curGroup, groupCardCloseCb, sendClickCb, contacts = [], groupMember, addGroupMemberCb, groupMessages } = props
 
   const [members, setMembers] = useState([])
   const [showAddToGroupLayout, setShowAddToGroupLayout] = useState(false)
+
+  console.log(groupMessages)
+
+  let messageEnd = useRef(null)
+
+  useEffect(() => {
+    if (messageEnd && messageEnd.current) {
+      messageEnd.current.scrollIntoView()
+    }
+  }, [messageEnd])
 
   useEffect(() => {
     setMembers(groupMember)
@@ -279,10 +289,7 @@ export function GroupCard(props) {
 
   const addToGroup = (memberId) => {
     // console.log('add group member ', memberId)
-
-    // TODO add friend to group
     addGroupMemberCb(memberId)
-
   }
 
   const addToGroupCloseClick = () => {
@@ -341,7 +348,17 @@ export function GroupCard(props) {
 
       <div className={'h-full w-full'}>
 
-        <div className={'h-96'}></div>
+        <div className={'h-96 overflow-auto mt-2'}>
+          {
+            groupMessages && groupMessages[curGroup] ? groupMessages[curGroup].map((message, index) => {
+              if (message.from === uid) {
+                return <SentMsgBox message={message} key={index} ref={(index + 1) === groupMessages[curGroup].length ? messageEnd : null} />
+              } else {
+                return <ReceivedMsgBox message={message} key={index} ref={(index + 1) === groupMessages[curGroup].length ? messageEnd : null} />
+              }
+            }) : <></>
+          }
+        </div>
 
         <EditArea sendClickCb={sendClickCb} />
       </div>
