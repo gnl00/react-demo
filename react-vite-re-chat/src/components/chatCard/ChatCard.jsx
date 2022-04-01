@@ -177,6 +177,10 @@ function EditArea(props) {
     setEmojiVal(emoji)
   }
 
+  const onTextAreaClick = () => {
+    setShowEmojiBox(false)
+  }
+
   return (
     <div className={'w-full h-auto text-gray-700'}>
       <div className={'flex flex-col justify-between w-full'}>
@@ -203,7 +207,7 @@ function EditArea(props) {
         <div className={'h-32 pt-1'}>
           <textarea className={'w-full h-full outline-none pl-1'} placeholder={'Input here'} value={inputVal || ''}
                     onChange={onTextChange}
-                    onSelect={evt => {onTextSelected(evt)}} onKeyDown={evt => onKeyDownHandler(evt)} />
+                    onSelect={evt => {onTextSelected(evt)}} onKeyDown={evt => onKeyDownHandler(evt)} onClick={onTextAreaClick} />
         </div>
 
         <div className={'flex justify-end items-center pr-2 pb-2 pt-2 cursor-default'}>
@@ -258,15 +262,13 @@ export function GroupCard(props) {
   const [members, setMembers] = useState([])
   const [showAddToGroupLayout, setShowAddToGroupLayout] = useState(false)
 
-  console.log(groupMessages)
-
   let messageEnd = useRef(null)
 
   useEffect(() => {
     if (messageEnd && messageEnd.current) {
       messageEnd.current.scrollIntoView()
     }
-  }, [messageEnd])
+  }, [groupMessages])
 
   useEffect(() => {
     setMembers(groupMember)
@@ -282,14 +284,22 @@ export function GroupCard(props) {
   }
 
   const addMemberClick = () => {
-    // console.log('addMemberClick')
+    // console.log('chatCard addMemberClick')
     setShowAddToGroupLayout(true)
 
   }
 
   const addToGroup = (memberId) => {
     // console.log('add group member ', memberId)
+    console.log('chatCard addMemberClick ', memberId)
     addGroupMemberCb(memberId)
+
+    setMembers({
+      [curGroup]: [
+        ...members[curGroup],
+        memberId
+      ]
+    })
   }
 
   const addToGroupCloseClick = () => {
@@ -327,7 +337,7 @@ export function GroupCard(props) {
 
       {
         showAddToGroupLayout ?
-          <div className={'z-10 w-full h-full p-2 shadow-lg flex flex-col justify-center items-center space-y-2'}>
+          <div className={['z-10 w-full h-auto p-2 shadow-lg flex flex-col justify-start items-center space-y-2'].join(' ')}>
             <div className={'w-1/3 flex justify-center items-center ring ring-red-100 text-red-400 rounded p-1 shadow-inner'}  onClick={addToGroupCloseClick}>
               Close
             </div>
@@ -343,12 +353,15 @@ export function GroupCard(props) {
                 })
               }
             </div>
-          </div> : <></>
+          </div>
+          : <></>
       }
+
+
 
       <div className={'h-full w-full'}>
 
-        <div className={'h-96 overflow-auto mt-2'}>
+        <div className={'h-96 overflow-auto mt-2 pl-2 pr-2'}>
           {
             groupMessages && groupMessages[curGroup] ? groupMessages[curGroup].map((message, index) => {
               if (message.from === uid) {

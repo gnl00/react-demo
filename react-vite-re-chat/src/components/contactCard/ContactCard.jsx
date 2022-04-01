@@ -74,14 +74,14 @@ export default function ContactCard(props) {
       <div className={'space-y-2'}>
         {
           contacts.map((contact, index) => {
-            return <ContactList key={index} contactListClickCb={contactListClickCb} contact={contact} unreadMessages={unreadMessages} latestMessage={latestMessage}  />
+            return <ContactList key={index} contactListClickCb={contactListClickCb} contact={contact} unreadMessages={unreadMessages} latestMessage={latestMessage} />
           })
         }
 
         {
           groups.map((group, index) => {
             return (
-              <GroupList key={index} group={group} groupCardOpenCb={groupCardOpenCb} />
+              <GroupList key={index} group={group} groupCardOpenCb={groupCardOpenCb} unreadMessages={unreadMessages}  latestMessage={latestMessage} />
             )
           })
         }

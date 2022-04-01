@@ -1,4 +1,4 @@
-export function buildMessage({from, to, body, type, date, read = false, group = false}) {
+export function buildMessage({from, to, body, type, date, read = false, group = {}}) {
   return {
     from,
     to,
@@ -7,7 +7,7 @@ export function buildMessage({from, to, body, type, date, read = false, group = 
     // string || binary
     type,
     date,
-    // is this message for group or not | default false
+    // is this message for group or not
     group,
     read
   }

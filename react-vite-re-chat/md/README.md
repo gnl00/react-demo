@@ -4,6 +4,15 @@
 ## 相关技术
 vite | react | react-router-dom | WebSocket | events | tailwind CSS
 
+<br>
+
+**完成功能**
+* 登录
+* 添加好友
+* 单个/群组消息发送
+* 发送表情
+* 消息和好友信息存储到`localStorage`
+
 ## 步骤
 1、搭建基本框架
 2、页面编写，组件封装
@@ -141,7 +150,7 @@ export default function Chat() {
 
 
 
-##参考
+## 参考
 [基于 Vue 开发一个 多人聊天室（万字长文） - 从 0 到 1 篇](https://segmentfault.com/a/1190000040688086)
 
 

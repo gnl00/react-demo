@@ -109,7 +109,7 @@ export default function Chat() {
     localStorage.setItem(Prefix + uid + messagesStoreSuf, JSON.stringify(messagesObj))
   }, [messagesObj])
 
-  /* ================================================= function callback =========================================================*/
+  /* ================================================= function =========================================================*/
   const updateMessageRecord = ({key, msgObj}) => {
 
     setMessagesObj(prevState => {
@@ -166,6 +166,163 @@ export default function Chat() {
 
     })
   }
+
+  const handleSingleMessage = (msgObj) => {
+    // 设置未读消息
+    // 当前聊天窗口对象和消息发送对象不一致才存入未读消息
+    if (to != msgObj.from) {
+
+      // 将 msgObj.from 加入 contacts
+      setContacts(prevState => {
+        let nextState = prevState
+
+        // 如果 contacts 中无当前联系人，添加
+        if (!prevState || !prevState.find(item => item.uid === msgObj.from)) {
+          nextState = [
+            ...prevState,
+            {
+              uid: msgObj.from
+            }
+          ]
+          // save contacts to local
+          localStorage.setItem(Prefix + uid + contactsSuf, JSON.stringify(nextState))
+        }
+        return nextState
+      })
+
+      setUnReadMessages(prevState => {
+
+        let key = msgObj.from
+        let count = 0
+
+        // 已经存在 key
+        if (prevState && Object.keys(prevState).indexOf(key) !== -1) {
+          // 获取 unread count
+          count = prevState[key].count
+        }
+
+        count = count + 1
+
+        // 未存在 key，根据 key 创建对象
+        let obj = {
+          [key]: {
+            count
+          }
+        }
+
+        let nextState = null
+
+        if (prevState) {
+          nextState = {
+            ...prevState,
+            ...obj,
+          }
+        } else {
+          nextState = {
+            ...obj
+          }
+        }
+
+        // save unread to local
+        localStorage.setItem(Prefix + uid + unReadMessageSuf, JSON.stringify(nextState))
+
+        return nextState
+      })
+    }
+
+    // 设置最近内容
+    updateLatestMessage({key: msgObj.from, body: msgObj.body, date: msgObj.date})
+
+    // update local while receive message
+    updateMessageRecord({key: msgObj.from, msgObj})
+  }
+
+  const handleGroupMessage = (msgObj) => {
+
+    let group = msgObj.group
+
+    setGroups(prevState => {
+      let nextState = prevState
+      let existGroup = prevState.find(item => item.gid === group.gid)
+      if (prevState && existGroup) {
+        existGroup.members = group.members
+      } else {
+        nextState = [
+          ...prevState, group
+        ]
+      }
+
+      // save group to local
+      localStorage.setItem(Prefix + uid + groupsSuf, JSON.stringify(nextState))
+
+      return nextState
+    })
+
+    // update group message
+    if (groupMessage && groupMessage[msgObj.group.gid]) {
+      setGroupMessage({
+        ...groupMessage,
+        [msgObj.group.gid]: [
+          ...groupMessage[msgObj.group.gid],
+          msgObj
+        ]
+      })
+    } else {
+      setGroupMessage({
+        ...groupMessage,
+        [msgObj.group.gid]: [msgObj]
+      })
+    }
+
+    // render unread message and latest message
+
+    if (curGroup !== msgObj.group.gid) {
+      setUnReadMessages(prevState => {
+        let nextState = null
+        if (prevState && prevState[group.gid]) {
+          let existUnread = prevState[group.gid]
+          nextState = {
+            ...prevState,
+            [group.gid]: {
+              count: existUnread.count + 1
+            }
+          }
+        } else {
+          nextState = {
+            [group.gid]: {
+              count: 1
+            }
+          }
+        }
+        return nextState
+      })
+    }
+
+    setLatestMessage(prevState => {
+      let nextState = null
+
+      if (prevState && prevState[group.gid]) {
+        nextState = {
+          ...prevState,
+          [group.gid]: {
+            time: toDateTime(msgObj.date),
+            text: msgObj.body
+          }
+        }
+      } else {
+        nextState = {
+          [group.gid]: {
+            time: toDateTime(msgObj.date),
+            text: msgObj.body
+          }
+        }
+      }
+      return nextState
+    })
+
+  }
+
+  /* ================================================= callback function =========================================================*/
 
   /* ========== Contacts Tab ===============*/
   const refreshClickCb = () => {
@@ -323,15 +480,15 @@ export default function Chat() {
 
     setShowGroupCard(true)
 
-    setGroupMember(prevState => {
+    setGroupMember({
+      [gid]: [
+        ...groups.find(item => item.gid === gid).members
+      ]
+    })
 
-      let nextState = {
-        [gid]: [
-          ...groups.find(item => item.gid === gid).members
-        ]
-      }
-
-      return nextState
+    setUnReadMessages({
+      ...unreadMessages,
+      [gid]: null
     })
   }
 
@@ -341,6 +498,7 @@ export default function Chat() {
   }
 
   const addGroupMemberCb = (memberId) => {
+
     let group = groups.find(item => item.gid === curGroup)
 
     // 检查是否存在该群组
@@ -365,18 +523,13 @@ export default function Chat() {
 
 
         // 更新群员信息
-        setGroupMember(prevState => {
-          // console.log(prevState)
-
-          let nextState = prevState
-
-          let members = nextState[curGroup]
-          if (members && members.indexOf(memberId) === -1) {
-            members.push(memberId)
-          }
-
-          return nextState
+        setGroupMember({
+          [curGroup]: [
+            ...groupMember[curGroup],
+            memberId
+          ]
         })
+
       }).catch(err => {
         console.log(err)
       })
@@ -389,32 +542,31 @@ export default function Chat() {
 
     if (val) {
 
+      const group = groups.find((item) => item.gid === curGroup)
+
       // build and send message to group
       const date = new Date().getTime()
-      const messageObj = buildMessage({from: uid, to: curGroup, body: val, type: 'text', date, group: true})
+      const messageObj = buildMessage({from: uid, to: curGroup, body: val, type: 'text', date, group})
       const msgJson = JSON.stringify(messageObj)
       webSocket.send(msgJson)
 
       // update group message
       setGroupMessage(prevState => {
-
         let nextState = prevState
-
         // 记录是否已存在
         if (nextState && nextState[curGroup]) {
           let messages = nextState[curGroup]
           messages.push(messageObj)
-        } else {
-          let msgObj = {
-            [curGroup]: [messageObj]
-          }
-
           nextState = {
             ...prevState,
-            ...msgObj
+            [curGroup]: [...messages]
+          }
+        } else {
+          nextState = {
+            ...prevState,
+            [curGroup]: [messageObj]
           }
         }
-
         return nextState
       })
 
@@ -425,81 +577,7 @@ export default function Chat() {
     }
   }
 
-  /* ================================================= function =========================================================*/
-  const handleSingleMessage = (msgObj) => {
-    // 设置未读消息
-    // 当前聊天窗口对象和消息发送对象不一致才存入未读消息
-    if (to != msgObj.from) {
-
-      // 将 msgObj.from 加入 contacts
-      setContacts(prevState => {
-        let nextState = prevState
-
-        // 如果 contacts 中无当前联系人，添加
-        if (!prevState || !prevState.find(item => item.uid === msgObj.from)) {
-          nextState = [
-            ...prevState,
-            {
-              uid: msgObj.from
-            }
-          ]
-          // save contacts to local
-          localStorage.setItem(Prefix + uid + contactsSuf, JSON.stringify(nextState))
-        }
-        return nextState
-      })
-
-      setUnReadMessages(prevState => {
-
-        let key = msgObj.from
-        let count = 0
-
-        // 已经存在 key
-        if (prevState && Object.keys(prevState).indexOf(key) !== -1) {
-          // 获取 unread count
-          count = prevState[key].count
-        }
-
-        count = count + 1
-
-        // 未存在 key，根据 key 创建对象
-        let obj = {
-          [key]: {
-            count
-          }
-        }
-
-        let nextState = null
-
-        if (prevState) {
-          nextState = {
-            ...prevState,
-            ...obj,
-          }
-        } else {
-          nextState = {
-            ...obj
-          }
-        }
-
-        // save unread to local
-        localStorage.setItem(Prefix + uid + unReadMessageSuf, JSON.stringify(nextState))
-
-        return nextState
-      })
-    }
-
-    // 设置最近内容
-    updateLatestMessage({key: msgObj.from, body: msgObj.body, date: msgObj.date})
-
-    // update local while receive message
-    updateMessageRecord({key: msgObj.from, msgObj})
-  }
-
-  const handleGroupMessage = (msgObj) => {
-    console.log(msgObj)
-  }
-
+  /* ================================================= fetch function =========================================================*/
   // Deprecated
   // fetch and set contacts
   // const fetchContacts = async (uid) => {
