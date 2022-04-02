@@ -153,7 +153,9 @@ export default function Chat() {
 ## 参考
 [基于 Vue 开发一个 多人聊天室（万字长文） - 从 0 到 1 篇](https://segmentfault.com/a/1190000040688086)
 
+https://gitee.com/wx_504ae56474/react-jwchat
 
+https://www.cnblogs.com/xiaoyan2017/p/12039544.html
 
 
 
