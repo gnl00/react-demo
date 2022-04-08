@@ -75,10 +75,14 @@ export default function Chat() {
 
     // get unread messages from local
     const localUnreadStr = localStorage.getItem(Prefix + uid + unReadMessageSuf)
-    if (localUnreadStr) {
-      const localUnread = JSON.parse(localUnreadStr)
+    if (localUnreadStr === 'undefined') {
+      localStorage.removeItem(Prefix + uid + unReadMessageSuf)
+    } else {
+      if (localUnreadStr) {
+        const localUnread = JSON.parse(localUnreadStr)
 
-      setUnReadMessages(localUnread)
+        setUnReadMessages(localUnread)
+      }
     }
 
     // get groups from local
@@ -95,7 +99,7 @@ export default function Chat() {
     if (message) {
       const msgObj = JSON.parse(message)
 
-      if (msgObj.group) {
+      if (msgObj.group.gid) {
         handleGroupMessage(msgObj)
       } else {
         handleSingleMessage(msgObj)
