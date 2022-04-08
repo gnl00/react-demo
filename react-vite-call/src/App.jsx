@@ -52,6 +52,9 @@ function App() {
           audio: true
         })
 
+        // set local video dom
+        localVideo.current.srcObject = localStream
+
         // 响应
         call.answer(localStream)
 
